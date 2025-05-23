@@ -1,15 +1,12 @@
 [user]
-name = "Warre"
-email = "warre.dujardin@techwolf.ai"
+name = "Warre Dujardin"
+email = {{ .email | quote }}
 
 [git]
-push-new-bookmark = true
 sign-on-push = true
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
-
-
 
 [aliases]
 l = ["log"]
@@ -23,11 +20,10 @@ dm = ["describe", "-m"]
 
 
 [signing]
-behavior = "own"
+behavior = "drop"
 backend = "ssh"
-key = "~/.ssh/id_ed25519.pub"
+key = {{ .ssh_signing_key | quote }}
 
 [ui]
 editor = "nvim"
-# diff-editor = "vscode"
 merge-editor = "vscode"
