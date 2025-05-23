@@ -29,24 +29,6 @@ function cdfzf
 	set -l output (printf "%s\n" $stdin | bfzf $argv) && cd $output || true
 end
 
-function awsl
-	aws sts get-caller-identity --profile tw-cluster-viewonlyaccess &> /dev/null
-    if test $status -ne 0
-       	aws sso login --sso-session TW-AWS
-    end
-
-    awsp $argv
-end
-
-function awsp
-	set -gx AWS_PROFILE (aws configure list-profiles | bfzf $argv)
-	set -l AWS_CREDENTIALS (aws configure export-credentials --profile $AWS_PROFILE)
-	set -gx AWS_ACCESS_KEY_ID (echo $AWS_CREDENTIALS | jq -r ".AccessKeyId")
-	set -gx AWS_SECRET_ACCESS_KEY (echo $AWS_CREDENTIALS | jq -r ".SecretAccessKey")
-	set -gx AWS_SESSION_TOKEN (echo $AWS_CREDENTIALS | jq -r ".SessionToken")
-	set -gx AWS_CREDENTIAL_EXPIRATION (echo $AWS_CREDENTIALS | jq -r ".Expiration")
-end
-
 function exportdotenv
 	# List .env* files
 	set -f dotenv_files (ls .env* 2>/dev/null)
@@ -87,28 +69,6 @@ function exportdotenv
 	end
 end
 
-function assumerole
-    # Get current identity
-    set -l SESSION_NAME (basename (aws sts get-caller-identity --query Arn --output text))
-    echo "Trying to assume role $argv[1] as $SESSION_NAME"
-    
-    # Attempt to assume role and redirect errors to /dev/null
-    set -l OUT (aws sts assume-role --role-arn $argv[1] --role-session-name "$SESSION_NAME")
-    
-    # Check if assume-role succeeded
-    if test $status -ne 0
-        echo "Error: Failed to assume role $argv[1]" >&2
-        return 1
-    end
-
-    # Export credentials
-    set -gx AWS_ACCESS_KEY_ID (echo $OUT | jq -r '.Credentials.AccessKeyId')
-    set -gx AWS_SECRET_ACCESS_KEY (echo $OUT | jq -r '.Credentials.SecretAccessKey')
-    set -gx AWS_SESSION_TOKEN (echo $OUT | jq -r '.Credentials.SessionToken')
-
-    echo "Assumed role $argv[1]"
-end
-
 function openremote
     # Check if inside a git repository
     if git rev-parse --is-inside-work-tree > /dev/null 2> /dev/null
@@ -132,11 +92,4 @@ function openremote
     else
         echo "Not inside a git repository."
     end
-end
-
-# TODO: turn this into cdparent (cdp?)
-# with fzf perchance
-function cdinfra
-    set -l cwd (string split -m 2 -r "/" (pwd))
-    cd "$cwd[1]/$argv[1]/$cwd[3]"
 end
