@@ -1,4 +1,6 @@
 {{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $ssh_signing_key := promptStringOnce . "ssh_signing_key" "SSH Signing Key" -}}
 
 [data]
 email = {{ $email | quote }}
+ssh_signing_key = {{ $ssh_signing_key | quote }} 

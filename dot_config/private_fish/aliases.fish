@@ -14,8 +14,7 @@ alias gitroot="cd (git rev-parse --show-toplevel)"
 alias pip='uv pip'
 abbr --add activate 'source .venv/bin/activate.fish'
 
-alias tw="ls -d ~/twrepos/* | cdfzf"
-alias bw="ls -d ~/botwolves/* | cdfzf"
+alias repos="ls -d ~/Repositories/* | cdfzf"
 alias config="ls -d ~/.config/* | cdfzf"
 
 # Version overrides
