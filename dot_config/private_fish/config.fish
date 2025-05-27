@@ -21,3 +21,5 @@ function log_command --on-event fish_preexec
     echo "$timestamp | $argv" >> ~/.fish_command_log
 end
 
+# enable the starship prompt
+starship init fish | source
