@@ -97,7 +97,7 @@ $character"""
 [custom.jj]
 ignore_timeout = true
 description = "The current jj status"
-detect_folders = [".jj"]
+when = "jj root"
 symbol = " "
 style = "purple"
 format = "on [$symbol($output )]($style)"
