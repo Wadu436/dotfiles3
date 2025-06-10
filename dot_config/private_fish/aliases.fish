@@ -1,9 +1,11 @@
 #alias editaliases="nvim ~/.config/fish/aliases.fish; source ~/.config/fish/aliases.fish"
 #alias editconfig="nvim ~/.config/fish/config.fish; source ~/.config/fish/config.fish"
 function fishcfg
-    set -l output (ls ~/.config/fish/*.fish | bfzf $argv)
-    if test -n "$output"
-        $EDITOR $output
+    cd ~/.config/fish/
+    set -l output (ls *.fish | bfzf $argv)
+    cd - # go back to the prev dir
+    if test -n "~/.config/fish/$output"
+        $EDITOR ~/.config/fish/$output
         source ~/.config/fish/config.fish
     end
 end
@@ -14,8 +16,8 @@ alias gitroot="cd (git rev-parse --show-toplevel)"
 alias pip='uv pip'
 abbr --add activate 'source .venv/bin/activate.fish'
 
-alias repos="ls -d ~/Repositories/* | cdfzf"
-alias config="ls -d ~/.config/* | cdfzf"
+alias repos="cd ~/Repositories; ls -d * | cdfzf"
+alias config="cd ~/.config/; ls -d * | cdfzf"
 
 ## Aliases
 # Filesystem and stuff

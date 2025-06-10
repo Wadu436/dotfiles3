@@ -1,3 +1,8 @@
+add_newline = false 
+
+#[character] # The name of the module we are configuring is 'character'
+#success_symbol = '[➜](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+
 format = """
 $username\
 $hostname\
@@ -93,6 +98,24 @@ $netns\
 $shell\
 $character"""
 
+# Run an Azure CLI command to display the current subscription.
+# This requires jq is installed.
+#[custom.azure]
+#style = "blue"
+#command="az account show -o json |jq -r .tenantDisplayName"
+#when="true"
+#format="on [$symbol $output]($style)"
+#symbol=""
+
+[azure]
+disabled = false
+symbol=" "
+
+[azure.subscription_aliases]
+"TechWolf Main Subscription" = "production"
+"Azure subscription 1" = "dev"
+
+
 # custom module for jj status
 [custom.jj]
 ignore_timeout = true
@@ -155,6 +178,7 @@ disabled = true
 
 [aws]
 symbol = " "
+format = 'on [$symbol($profile )(\($region\) )( )]($style)'
 
 [buf]
 symbol = " "

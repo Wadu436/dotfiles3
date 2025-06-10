@@ -11,6 +11,7 @@ set -Ux COREPACK_ENABLE_AUTO_PIN 0
 
 set -gx EDITOR nvim
 set -gx TG_NO_AUTO_APPROVE "true"
+set -gx COMPOSE_BAKE "true"
 
 # jj completions 
 COMPLETE=fish jj | source
