@@ -28,7 +28,7 @@ alias mkdir='mkdir -p'
 alias ps='ps auxf'
 alias ping='ping -c 10'
 
-alias cat='bat'
+alias cat='bat -p'
 
 alias vi='nvim'
 alias vim='nvim'
