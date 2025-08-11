@@ -10,8 +10,8 @@ end
 set -Ux COREPACK_ENABLE_AUTO_PIN 0
 
 set -gx EDITOR nvim
-set -gx TG_NO_AUTO_APPROVE "true"
-set -gx COMPOSE_BAKE "true"
+set -gx TG_NO_AUTO_APPROVE true
+set -gx COMPOSE_BAKE true
 
 # jj completions 
 COMPLETE=fish jj | source
@@ -19,8 +19,11 @@ COMPLETE=fish jj | source
 # Log every command
 function log_command --on-event fish_preexec
     set timestamp (date "+%Y-%m-%dT%H:%M:%S%z")
-    echo "$timestamp | $argv" >> ~/.fish_command_log
+    echo "$timestamp | $argv" >>~/.fish_command_log
 end
 
 # enable the starship prompt
 starship init fish | source
+
+# enable mise
+mise activate fish | source

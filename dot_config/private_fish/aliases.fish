@@ -19,6 +19,8 @@ abbr --add activate 'source .venv/bin/activate.fish'
 alias repos="cd ~/Repositories; ls -d * | cdfzf"
 alias config="cd ~/.config/; ls -d * | cdfzf"
 
+alias yay="paru"
+
 ## Aliases
 # Filesystem and stuff
 alias cp='cp -i'
@@ -34,7 +36,7 @@ alias vi='nvim'
 alias vim='nvim'
 
 alias eza='eza -F -gh --time-style=long-iso'
-alias ls='eza'  # add file type extension
+alias ls='eza' # add file type extension
 alias la='eza -a' # show hidden files
 alias ll='eza -l' # long listing format
 alias lt='eza -T' # Tree format
@@ -68,7 +70,6 @@ abbr --add dcstart 'docker compose start'
 # abbreviations for various programs
 abbr --add c "code ."
 abbr --add cu "cursor ."
-abbr --add z "zellij"
-abbr --add tf "terraform"
-abbr --add tg "terragrunt"
-
+abbr --add z zellij
+abbr --add tf terraform
+abbr --add tg terragrunt
