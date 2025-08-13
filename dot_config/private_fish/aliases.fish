@@ -9,6 +9,9 @@ function fishcfg
         source ~/.config/fish/config.fish
     end
 end
+
+abbr --add jjtrunk 'jj git fetch && jj new -r "trunk()"'
+
 alias reload="source ~/.config/fish/config.fish"
 alias peel="exit" # We just take the shell off
 alias home="cd ~"
@@ -34,6 +37,8 @@ alias cat='bat -p'
 
 alias vi='nvim'
 alias vim='nvim'
+
+alias gl='glab'
 
 alias eza='eza -F -gh --time-style=long-iso'
 alias ls='eza' # add file type extension
@@ -70,6 +75,7 @@ abbr --add dcstart 'docker compose start'
 # abbreviations for various programs
 abbr --add c "code ."
 abbr --add cu "cursor ."
-abbr --add z zellij
-abbr --add tf terraform
-abbr --add tg terragrunt
+abbr --add z "zellij"
+abbr --add tf "terraform"
+abbr --add tg "terragrunt"
+
