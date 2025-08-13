@@ -13,7 +13,6 @@ end
 abbr --add jjtrunk 'jj git fetch && jj new -r "trunk()"'
 
 alias reload="source ~/.config/fish/config.fish"
-alias peel="exit" # We just take the shell off
 alias home="cd ~"
 alias gitroot="cd (git rev-parse --show-toplevel)"
 alias pip='uv pip'
@@ -21,8 +20,6 @@ abbr --add activate 'source .venv/bin/activate.fish'
 
 alias repos="cd ~/Repositories; ls -d * | cdfzf"
 alias config="cd ~/.config/; ls -d * | cdfzf"
-
-alias yay="paru"
 
 ## Aliases
 # Filesystem and stuff
