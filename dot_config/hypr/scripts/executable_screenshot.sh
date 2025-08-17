@@ -9,9 +9,9 @@ SAVE_TO="$DIR/$FILE"
 mkdir -p $DIR
 
 # Take a screenshot with grim (and slurp for selection)
-grim -g "$(slurp -o -c 04d9ff -w 0)" $SAVE_TO
+grim -g "$(slurp -o -b '#ffffff20' -B '#ffffff20' -s '#ffffff40' -w 0 -d)" $SAVE_TO
 # Send a notification if grim was successful
 if [ $? -eq 0 ]; then
-    notify-send -i "$SAVE_TO" "Screenshot captured" "Copied to clipboard\nSaved to $SAVE_TO" 
-    wl-copy < $DIR/$FILE
+  notify-send -i "$SAVE_TO" "Screenshot captured" "Copied to clipboard\nSaved to $SAVE_TO"
+  wl-copy <$DIR/$FILE
 fi
