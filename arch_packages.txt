@@ -1,0 +1,66 @@
+# terminal stuff
+fish
+fzf
+eza
+fd
+ripgrep
+which
+fastfetch
+
+# system
+pipewire
+wireplumber
+pipewire-alsa
+pipewire-pulse
+pavucontrol
+
+# fonts
+noto-fonts
+nerd-fonts
+ttf-dejavu
+ttf-fira-code
+ttf-fira-code
+ttf-fira-sans
+otf-font-awesome
+
+# window manager
+hyprland
+hypridle
+hyprlock
+hyprcursor
+hyprpaper
+hyprpolkitagent
+waybar
+dunst
+clipse-bin
+rofi
+xdg-desktop-portal-hyprland
+hyprsysteminfo
+qt5-wayland
+qt6-wayland
+quickshell
+wl-clipboard
+grim
+slurp
+network-manager-applet
+blueman
+
+# dev tools
+git
+jujutsu
+
+# programs
+obsidian
+visual-studio-code-bin
+discord
+firefox
+spotify-launcher
+
+# thunar and friends
+thunar
+gvfs
+thunar-archive-plugin
+thunar-media-tags-plugin
+thunar-shares-plugin
+thunar-volman
+
