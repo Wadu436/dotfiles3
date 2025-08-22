@@ -72,7 +72,8 @@ abbr --add dcstart 'docker compose start'
 # abbreviations for various programs
 abbr --add c "code ."
 abbr --add cu "cursor ."
-abbr --add z "zellij"
-abbr --add tf "terraform"
-abbr --add tg "terragrunt"
+abbr --add z zellij
+abbr --add tf terraform
+abbr --add tg terragrunt
 
+abbr --add cm chezmoi
