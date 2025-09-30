@@ -5,6 +5,9 @@ source ~/.config/fish/machine.fish
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
+    if type -q atuin
+        atuin init fish --disable-ctrl-r --disable-up-arrow | source
+    end
 end
 
 set -Ux COREPACK_ENABLE_AUTO_PIN 0
