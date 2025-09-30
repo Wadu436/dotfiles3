@@ -63,6 +63,7 @@ abbr --add gcm "git commit -S -m"
 abbr --add gfa "git fetch --all"
 
 # Docker
+abbr --add dc 'docker compose'
 abbr --add dcu 'docker compose up'
 abbr --add dcub 'docker compose up --build'
 abbr --add dcd 'docker compose down'
