@@ -1,0 +1,11 @@
+# See https://wiki.hypr.land/Configuring/Monitors/
+
+# monitor = name, resolution, position, scale, ...
+{{- if eq .chezmoi.hostname "timberhearth" }}
+{{/* Desktop */}}
+monitor=DP-1, preferred, auto, 1, vrr, 2 # vrr mode 2: fullscreen only. enabling vrr on the ultrawide causes weird flickering
+monitor=DP-3, preferred, auto-left, 1, vrr, 1 # vrr mode 1: on 
+{{ else }}
+{{/* Default */}}
+monitor=,preferred,auto,1
+{{ end }}
