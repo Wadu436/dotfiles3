@@ -46,7 +46,7 @@ alias lt='eza -T' # Tree format
 alias massmurder='docker stop $(docker ps -a -q)'
 alias exterminatus='massmurder && docker rm $(docker ps -a -q)'
 
-alias awslocal="AWS_REGION=local AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url=http://localhost:4566"
+alias awslocal="AWS_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url=http://localhost:4566"
 
 ## Abbreviations
 abbr --add h "history | grep"
@@ -69,6 +69,7 @@ abbr --add dcub 'docker compose up --build'
 abbr --add dcd 'docker compose down'
 abbr --add dcstop 'docker compose stop'
 abbr --add dcstart 'docker compose start'
+abbr --add dcl 'docker compose logs --follow'
 
 # abbreviations for various programs
 abbr --add c "code ."

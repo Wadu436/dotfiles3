@@ -5,6 +5,9 @@ source ~/.config/fish/machine.fish
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
+    if type -q atuin
+        atuin init fish --disable-ctrl-r --disable-up-arrow | source
+    end
 end
 
 set -Ux COREPACK_ENABLE_AUTO_PIN 0
@@ -27,10 +30,3 @@ starship init fish | source
 
 # enable mise
 mise activate fish | source
-
-# pnpm
-set -gx PNPM_HOME "/home/warre/.local/share/pnpm"
-if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
-end
-# pnpm end
