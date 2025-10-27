@@ -4,6 +4,7 @@ email = {{ .email | quote }}
 
 [git]
 sign-on-push = true
+private-commits = "description(glob:'wip:*') | description(glob:'private:*')"
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
