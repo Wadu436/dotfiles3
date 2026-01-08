@@ -3,11 +3,14 @@ name = "Warre Dujardin"
 email = {{ .email | quote }}
 
 [git]
-sign-on-push = true
 private-commits = "description(glob:'wip:*') | description(glob:'private:*')"
+
+[revsets]
+log = '@ | ancestors(trunk()..(visible_heads() & mine()), 2) | trunk()'
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
+stragglers = 'immutable()+ ~ immutable()'
 
 [aliases]
 l = ["log"]
@@ -19,15 +22,18 @@ gf = ["git", "fetch"]
 gcl = ["git", "clone", "--colocate"]
 tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "@"]
 dm = ["describe", "-m"]
-
+ls = ['log', '-r', '@', '--no-graph', '-T', 'diff.files().map(|f| f.target().path()).join("\n") ++ "\n"']
+evolve = ['rebase', '--skip-emptied', '-d', 'trunk()']
+pullup = ['evolve', '-s', 'stragglers']
+sync = ['git', 'fetch', '--all-remotes']
 
 [signing]
-behavior = "drop"
+behavior = "own"
 backend = "ssh"
 key = {{ .ssh_signing_key | quote }}
 
 [ui]
 editor = "nvim"
 merge-editor = "vscode"
-pager = "delta"
+pager = ["delta", "--pager", "less -FRX"]
 diff-formatter = ":git"

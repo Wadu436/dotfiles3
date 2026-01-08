@@ -124,6 +124,7 @@ when = "jj root"
 symbol = " "
 style = "purple"
 format = "on [$symbol($output )]($style)"
+shell = ["sh", "--noprofile", "--noprofile"]
 command = '''
 jj log --ignore-working-copy --no-graph --color always -r @ -T '
             separate(
@@ -169,6 +170,7 @@ disabled = true
 # re-enable git_branch as long as we're not in a jj repo
 [custom.git_branch]
 when = true
+shell = ["sh", "--noprofile", "--noprofile"]
 command = "jj root >/dev/null 2>&1 || starship module git_branch"
 description = "Only show git_branch if we're not in a jj repo"
 
