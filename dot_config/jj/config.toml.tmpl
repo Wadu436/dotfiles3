@@ -10,6 +10,7 @@ log = '@ | ancestors(trunk()..(visible_heads() & mine()), 2) | trunk()'
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
+'closest_main(to)' = 'heads(::to & ::main)'
 stragglers = 'immutable()+ ~ immutable()'
 
 [aliases]
