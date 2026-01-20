@@ -10,7 +10,8 @@ log = '@ | ancestors(trunk()..(visible_heads() & mine()), 2) | trunk()'
 
 [revset-aliases]
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
-'closest_main(to)' = 'heads(::to & ::main)'
+'lca(a, b)' = 'heads(::a & ::b)' # Last Common Ancestor
+'subtree(a, b)' = 'lca(a, b)::a | lca(a, b)::b' # Tree from the Last Common Ancestor to both heads
 stragglers = 'immutable()+ ~ immutable()'
 
 [aliases]
