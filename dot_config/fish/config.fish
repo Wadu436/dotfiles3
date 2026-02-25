@@ -14,6 +14,8 @@ set -Ux COREPACK_ENABLE_AUTO_PIN 0
 
 set -gx EDITOR nvim
 set -gx TG_NO_AUTO_APPROVE true
+set -gx TG_PARALLELISM 4
+set -gx TG_PROVIDER_CACHE true
 set -gx COMPOSE_BAKE true
 
 # jj completions 

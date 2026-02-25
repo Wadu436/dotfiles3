@@ -201,3 +201,24 @@ function tokei-diff --description "Compare lines of code between two JJ commits 
     _cleanup
     functions -e _cleanup
 end
+
+function claude-ws --description "Create a jj workspace in ~/workspaces and launch Claude Code in it"
+    set -l repo_name (basename (jj root 2>/dev/null))
+    if test -z "$repo_name"
+        echo "Not inside a jj repository." >&2
+        return 1
+    end
+
+    set -l hex (printf '%04x%04x' (random) (random))
+    set -l ws_name "$repo_name-$hex"
+    set -l ws_path ~/workspaces/$ws_name
+
+    mkdir -p ~/workspaces
+
+    if not jj workspace add --name "$ws_name" "$ws_path"
+        return 1
+    end
+
+    cd "$ws_path"
+    claude
+end
