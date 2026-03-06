@@ -10,7 +10,7 @@ if status is-interactive
     end
 end
 
-set -Ux COREPACK_ENABLE_AUTO_PIN 0
+set -gx COREPACK_ENABLE_AUTO_PIN 0
 
 set -gx EDITOR nvim
 set -gx TG_NO_AUTO_APPROVE true

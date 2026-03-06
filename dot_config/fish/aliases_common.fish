@@ -14,7 +14,7 @@ abbr --add jjtrunk 'jj git fetch && jj new -r "trunk()"'
 
 alias reload="source ~/.config/fish/config.fish"
 alias home="cd ~"
-alias gitroot="cd (git rev-parse --show-toplevel)"
+alias gitroot="cd (jj root)"
 alias pip='uv pip'
 abbr --add activate 'source .venv/bin/activate.fish'
 
@@ -27,7 +27,11 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -iv'
 alias mkdir='mkdir -p'
-alias ps='ps auxf'
+if test (uname) = Linux
+    alias ps='ps auxf'
+else
+    alias ps='ps aux'
+end
 alias ping='ping -c 10'
 
 alias cat='bat -p'
@@ -50,17 +54,6 @@ alias awslocal="AWS_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KE
 
 ## Abbreviations
 abbr --add h "history | grep"
-abbr --add gs "git status"
-abbr --add gpl "git pull"
-abbr --add gps "git push"
-abbr --add gpsu "git push -u origin"
-abbr --add gpp "git pull && git push"
-abbr --add ga "git add"
-abbr --add gcl "git clone"
-abbr --add gc "git checkout"
-abbr --add gcb "git checkout -b"
-abbr --add gcm "git commit -S -m"
-abbr --add gfa "git fetch --all"
 
 # Docker
 abbr --add dc 'docker compose'
@@ -75,7 +68,7 @@ abbr --add dcl 'docker compose logs --follow'
 abbr --add c "code ."
 abbr --add cu "cursor ."
 abbr --add z zellij
-abbr --add tf terraform
+abbr --add tf tofu
 abbr --add tg terragrunt
 
 abbr --add cm chezmoi

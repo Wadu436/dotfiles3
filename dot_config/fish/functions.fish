@@ -70,28 +70,25 @@ function exportdotenv
 end
 
 function openremote
-    # Check if inside a git repository
-    if git rev-parse --is-inside-work-tree >/dev/null 2>/dev/null
-        # Get the remote URL (defaulting to 'origin')
-        set remote (git config --get remote.origin.url)
-
-        if test -n "$remote"
-            # Transform SSH URL (git@github.com:user/repo.git) to HTTPS
-            if string match -rq '^git@' -- $remote
-                set remote (string replace -r '^git@([^:]+):' 'https://$1/' -- $remote)
-            end
-
-            # Remove .git suffix if present
-            set remote (string replace -r '\.git$' '' -- $remote)
-
-            # echo $remote
-            open $remote
-        else
-            echo "No remote URL set for 'origin'."
-        end
-    else
-        echo "Not inside a git repository."
+    if not jj root >/dev/null 2>&1
+        echo "Not inside a jj repository."
+        return 1
     end
+
+    set remote (jj git remote list 2>/dev/null | string match -r '^origin\s+(\S+)' | tail -n 1)
+
+    if test -z "$remote"
+        echo "No remote URL set for 'origin'."
+        return 1
+    end
+
+    # Transform SSH URL (git@host:user/repo.git) to HTTPS
+    if string match -rq '^git@' -- $remote
+        set remote (string replace -r '^git@([^:]+):' 'https://$1/' -- $remote)
+    end
+
+    set remote (string replace -r '\.git$' '' -- $remote)
+    open $remote
 end
 
 function tokei-diff --description "Compare lines of code between two JJ commits using tokei"
