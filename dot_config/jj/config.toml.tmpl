@@ -15,6 +15,7 @@ log = '@ | ancestors(trunk()..(visible_heads() & mine()), 2) | trunk()'
 'closest_bookmark(to)' = 'heads(::to & bookmarks())'
 'lca(a, b)' = 'heads(::a & ::b)' # Last Common Ancestor
 'subtree(a, b)' = 'lca(a, b)::a | lca(a, b)::b' # Tree from the Last Common Ancestor to both heads
+'mr(a)' = 'lca(trunk(), a)..a'
 stragglers = 'immutable()+ ~ immutable()'
 
 [aliases]
@@ -40,5 +41,6 @@ key = {{ .ssh_signing_key | quote }}
 [ui]
 editor = "nvim"
 merge-editor = "vscode"
-pager = ["delta", "--pager", "less -FRX"]
-diff-formatter = ":git"
+pager = ["delta", "--pager", "less -FR --mouse"]
+# diff-formatter = ":git"
+diff-formatter = ["difft", "--color=always", "--syntax-highlight=off", "--sort-paths", "$left", "$right"]
