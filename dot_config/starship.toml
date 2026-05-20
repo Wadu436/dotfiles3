@@ -3,7 +3,6 @@ add_newline = false
 #[character] # The name of the module we are configuring is 'character'
 #success_symbol = '[➜](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
 
-
 format = """
 $username\
 $hostname\
@@ -15,6 +14,11 @@ $directory\
 $vcsh\
 $fossil_branch\
 $fossil_metrics\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
 ${custom.jj}\
 $hg_branch\
 $pijul_channel\
@@ -72,6 +76,7 @@ $meson\
 $spack\
 $memory_usage\
 $aws\
+$gcloud\
 $openstack\
 $azure\
 $nats\
@@ -80,6 +85,7 @@ $env_var\
 $mise\
 $crystal\
 $custom\
+$sudo\
 $cmd_duration\
 $line_break\
 $jobs\
@@ -101,9 +107,6 @@ $character"""
 #format="on [$symbol $output]($style)"
 #symbol=""
 
-[character]
-success_symbol = "[❯](bold blue)"
-
 [azure]
 disabled = false
 symbol=" "
@@ -121,7 +124,7 @@ when = "jj root"
 symbol = " "
 style = "purple"
 format = "on [$symbol($output )]($style)"
-shell = ["sh", "--noprofile", "--norc"]
+shell = ["sh", "--noprofile", "--noprofile"]
 command = '''
 jj log --ignore-working-copy --no-graph --color always -r @ -T '
             separate(
@@ -148,9 +151,32 @@ jj log --ignore-working-copy --no-graph --color always -r @ -T '
         )'
 '''
 
-[kubernetes]
-detect_folders = ["k8s", "kube", "kubernetes", "helm"]
-detect_files = ["kubeconfig", "k8s.yaml", "k8s.yml"]
+# optionally disable git modules
+
+[git_status]
+disabled = true
+
+[git_commit]
+disabled = true
+tag_symbol = '  '
+
+[git_metrics]
+disabled = true
+
+[git_branch]
+symbol = " "
+disabled = true
+
+# re-enable git_branch as long as we're not in a jj repo
+[custom.git_branch]
+when = true
+shell = ["sh", "--noprofile", "--noprofile"]
+command = "jj root >/dev/null 2>&1 || starship module git_branch"
+description = "Only show git_branch if we're not in a jj repo"
+
+[gcloud]
+symbol = "󱇶 "
+disabled = true
 
 [aws]
 symbol = " "
@@ -303,7 +329,6 @@ symbol = " "
 
 [python]
 symbol = " "
-disabled = true
 
 [rlang]
 symbol = "󰟔 "
@@ -325,20 +350,3 @@ symbol = " "
 
 [gradle]
 symbol = " "
-
-[direnv]
-disabled = true
-
-[mise]
-disabled = true
-
-[cmd_duration]
-min_time = 5_000
-
-[status]
-disabled = false
-format = '[$status]($style) '
-
-[time]
-disabled = true
-

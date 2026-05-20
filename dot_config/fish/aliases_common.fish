@@ -52,8 +52,6 @@ alias exterminatus='massmurder && docker rm $(docker ps -a -q)'
 
 alias awslocal="AWS_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url=http://localhost:4566"
 
-alias ops="opp --shell"
-
 ## Abbreviations
 abbr --add h "history | grep"
 
@@ -72,6 +70,5 @@ abbr --add cu "cursor ."
 abbr --add z zellij
 abbr --add tf tofu
 abbr --add tg terragrunt
-alias terraform tofu
 
 abbr --add cm chezmoi

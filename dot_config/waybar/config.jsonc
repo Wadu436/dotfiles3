@@ -8,7 +8,7 @@
   // Choose the order of the modules
   "modules-left": [
     "hyprland/workspaces",
-    "hyprland/mode",
+    "hyprland/submap",
     "hyprland/scratchpad",
     "custom/media"
   ],
@@ -49,6 +49,11 @@
   //         "default": ""
   //     }
   // },
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1"
+  },
   "keyboard-state": {
     //        "numlock": true,
     "capslock": true,
@@ -58,7 +63,7 @@
       "unlocked": ""
     }
   },
-  "sway/mode": {
+  "hyprland/submap": {
     "format": "<span style=\"italic\">{}</span>"
   },
   "sway/scratchpad": {

@@ -29,7 +29,7 @@ function cdfzf
     set -l output (printf "%s\n" $stdin | bfzf $argv) && cd $output || true
 end
 
-function senv
+function exportdotenv
     # List .env* files
     set -f dotenv_files (ls .env* 2>/dev/null)
 
@@ -63,9 +63,6 @@ function senv
 
         # Export the variable if both key and value are valid
         if test -n "$key" -a -n "$value"
-            if string match -q '*op://*' -- $value
-                set -f value (echo $value | op inject)
-            end
             echo "$key: \"$$key\" -> \"$value\""
             set -gx $key $value
         end

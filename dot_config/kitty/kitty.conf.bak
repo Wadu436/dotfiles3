@@ -1,13 +1,12 @@
 # vim:fileencoding=utf-8:foldmethod=marker
 
-
 #: Fonts {{{
 
 #: kitty has very powerful font management. You can configure
 #: individual font faces and even specify special fonts for particular
 #: characters.
 
-# font_family      FiraMono Nerd Font Mono,NotoMono Nerd Font,DejaVu Sans Mono
+font_family      Fira Code SemiBold,MesloLGS Nerd Font
 # bold_font        auto
 # italic_font      auto
 # bold_italic_font auto
@@ -21,7 +20,7 @@
 #: <https://sw.kovidgoyal.net/kitty/kittens/choose-fonts/#font-spec-
 #: syntax>.
 
-# font_size 11.0
+font_size 11.0
 
 #: Font size (in pts).
 
@@ -959,14 +958,17 @@
 #: only at the bottom and right edges. The value can be one of: top-
 #: left, top, top-right, left, center, right, bottom-left, bottom,
 #: bottom-right.
-# active_border_color #c4a7e7
+
+# active_border_color #00ff00
 
 #: The color for the border of the active window. Set this to none to
 #: not draw borders around the active window.
-# inactive_border_color #403d52
+
+# inactive_border_color #cccccc
 
 #: The color for the border of inactive windows.
-# bell_border_color #eb6f92
+
+# bell_border_color #ff5a00
 
 #: The color for the border of inactive windows in which a bell has
 #: occurred.
@@ -1244,8 +1246,9 @@
 #: }}}
 
 #: Color scheme {{{
-# foreground #d8d8d8
-# background #080808
+
+foreground #d8d8d8
+background #080808
 
 #: The foreground and background colors.
 
@@ -1858,7 +1861,7 @@ background_opacity 0.7
 #: background_opacity. If you want to use both, you are probably
 #: better off just hiding the titlebar with hide_window_decorations.
 
-macos_option_as_alt yes
+# macos_option_as_alt no
 
 #: Use the Option key as an Alt key on macOS. With this set to no,
 #: kitty will use the macOS native Option+Key to enter Unicode
@@ -2163,7 +2166,7 @@ macos_option_as_alt yes
 #: New window
 
 # map kitty_mod+enter new_window
-# map cmd+enter       launch --location=hsplit
+# map cmd+enter       new_window
 
 #::  You can open a new kitty window running an arbitrary program, for
 #::  example::
@@ -2694,45 +2697,3 @@ macos_option_as_alt yes
 
 #: }}}
 
-
-
-# BEGIN_KITTY_THEME
-# Catppuccin-Mocha
-include current-theme.conf
-# END_KITTY_THEME
-#
-# cursor                   #ebbcba
-# cursor_text_color        #191724
-cursor_shape             block
-cursor_beam_thickness    2.0
-cursor_underline_thickness 2.5
-cursor_stop_blinking_after 0
-
-globinclude kitty.d/**/*.conf
-
-enabled_layouts splits,tall,fat,stack
-map kitty_mod+enter launch --location=vsplit --cwd=current
-map kitty_mod+\ launch --location=hsplit --cwd=current
-
-tab_title_template "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{' RESIZE ' if keyboard_mode == 'resize' else ''}{title}"
-
-# Resize mode: ctrl+shift+r to enter, hjkl/arrows to resize, esc/enter to exit
-map --new-mode resize kitty_mod+r
-map --mode resize h resize_window narrower 3
-map --mode resize j resize_window shorter 3
-map --mode resize k resize_window taller 3
-map --mode resize l resize_window wider 3
-map --mode resize left resize_window narrower 3
-map --mode resize down resize_window shorter 3
-map --mode resize up resize_window taller 3
-map --mode resize right resize_window wider 3
-map --mode resize r resize_window reset
-map --mode resize escape pop_keyboard_mode
-map --mode resize enter pop_keyboard_mode
-
-tab_bar_style            custom
-tab_bar_margin_width     8.0
-tab_bar_margin_height    6.0 6.0
-tab_bar_min_tabs         1
-active_tab_font_style    bold
-inactive_tab_font_style  normal
