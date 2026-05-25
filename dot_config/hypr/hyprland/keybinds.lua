@@ -9,7 +9,7 @@ local function uwsm_launch(command)
 end
 
 -- Hyprland management
-hl.bind("SUPER + M", hl.dsp.exec_cmd("uwsm stop")) -- Force quit Hyprland
+hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd("uwsm stop")) -- Force quit Hyprland
 
 -- Window management
 hl.bind("SUPER + Q", hl.dsp.window.close())                                 -- Close active window
@@ -55,12 +55,10 @@ hl.bind("SUPER + SHIFT + mouse:272", hl.dsp.window.resize(), { mouse = true }) -
 hl.bind("SUPER + D", uwsm_launch('rofi -show drun -show-icons -run-command "uwsm app -- {cmd}"')) -- Application launcher
 hl.bind("SUPER + Tab", uwsm_launch("rofi -show window -show-icons"))                              -- Application switcher
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshots
-hl.bind("SUPER + Pause", hl.dsp.exec_cmd("wlogout"))                                              -- Power menu
+hl.bind("SUPER + Pause", hl.dsp.exec_cmd("swaync-client -t -sw"))                                 -- Toggle notification panel
 
 hl.on("hyprland.start", function() hl.dispatch(uwsm_launch("clipse -listen")) end)
 hl.bind("SUPER + V", uwsm_launch("kitty --class clipse -e clipse")) -- Clipboard manager
-
-hl.on("hyprland.start", function() hl.dispatch(uwsm_launch("hypridle")) end)
 
 -- Launch things
 hl.bind("SUPER + Return", uwsm_launch("kitty")) -- Terminal
@@ -74,7 +72,7 @@ hl.bind(
 )
 hl.bind(
 	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+	hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-"),
 	{ repeatable = true, locked = true }
 )
 hl.bind(

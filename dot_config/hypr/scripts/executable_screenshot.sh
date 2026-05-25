@@ -7,10 +7,11 @@ set -l SAVE_TO "$DIR/$FILE"
 mkdir -p $DIR
 
 set -l region (slurp -o -b '#ffffff20' -B '#ffffff20' -s '#ffffff40' -w 0 -d)
-echo $region
+test -z "$region"; and exit 0
+
 grim -g "$region" $SAVE_TO
 
 if test $status -eq 0
+    wl-copy --type image/png < $SAVE_TO
     notify-send -i "$SAVE_TO" "Screenshot captured" "Copied to clipboard\nSaved to $SAVE_TO"
-    wl-copy < $SAVE_TO
 end

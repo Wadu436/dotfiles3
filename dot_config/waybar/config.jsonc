@@ -2,19 +2,23 @@
 {
   // "layer": "top", // Waybar at top layer
   // "position": "bottom", // Waybar position (top|bottom|left|right)
-  "height": 30, // Waybar height (to be removed for auto height)
+  // "height": 30, // omitted for auto height — let CSS drive it
   // "width": 1280, // Waybar width
-  "spacing": 4, // Gaps between modules (4px)
+  "spacing": 0, // gaps handled by CSS margins for the floating look
   // Choose the order of the modules
   "modules-left": [
     "hyprland/workspaces",
     "hyprland/submap",
     "hyprland/scratchpad",
-    "custom/media"
+    "mpris"
   ],
   "modules-center": [
     "hyprland/window"
   ],
+  "hyprland/window": {
+    "format": "{title}",
+    "separate-outputs": true
+  },
   "modules-right": [
     //        "mpd",
     //        "idle_inhibitor",
@@ -30,7 +34,8 @@
     "battery",
     //        "battery#bat2",
     "clock",
-    "tray"
+    "tray",
+    "custom/notification"
   ],
   // Modules configuration
   // "sway/workspaces": {
@@ -217,16 +222,39 @@
     },
     "on-click": "pavucontrol"
   },
-  "custom/media": {
-    "format": "{icon} {}",
-    "return-type": "json",
-    "max-length": 40,
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon} {text}",
     "format-icons": {
-      "spotify": "",
-      "default": "🎜"
+      "notification": "",
+      "none": "",
+      "dnd-notification": "",
+      "dnd-none": "",
+      "inhibited-notification": "",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "",
+      "dnd-inhibited-none": ""
     },
-    "escape": true,
-    "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-    // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "mpris": {
+    "format": "{player_icon} {dynamic}",
+    "format-paused": "{player_icon} {status_icon} {dynamic}",
+    "format-stopped": "",
+    "status-icons": { "paused": "" },
+    "title-len": 60,
+    "dynamic-order": ["title", "artist"],
+    "player-icons": {
+      "spotify": "",
+      "firefox": "",
+      "haruna": "",
+      "mpv": "",
+      "default": ""
+    }
   }
 }

@@ -7,13 +7,14 @@
 hl.config({
 	general = {
 		gaps_in = 3,
-		gaps_out = 5,
+		gaps_out = { top = 0, right = 4, bottom = 4, left = 4 }, -- 0 on top so waybar sits flush
 
 		border_size = 2,
 
 		col = {
-			active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-			inactive_border = "rgba(595959aa)"
+			-- Rosé Pine: iris → foam gradient for focus, highlight_med for inactive
+			active_border = { colors = { "rgba(c4a7e7ee)", "rgba(9ccfd8ee)" }, angle = 45 },
+			inactive_border = "rgba(403d52aa)",
 		},
 
 		resize_on_border = false,
@@ -31,7 +32,7 @@ hl.config({
 			enabled = true,
 			range = 4,
 			render_power = 3,
-			color = "rgba(1a1a1aee)",
+			color = "rgba(191724ee)", -- Rosé Pine base
 		},
 
 		blur = {

@@ -1,82 +1,66 @@
+/* Rosé Pine palette */
+@define-color base            #191724;
+@define-color surface         #1f1d2e;
+@define-color overlay         #26233a;
+@define-color muted           #6e6a86;
+@define-color subtle          #908caa;
+@define-color text            #e0def4;
+@define-color love            #eb6f92;
+@define-color gold            #f6c177;
+@define-color rose            #ebbcba;
+@define-color pine            #31748f;
+@define-color foam            #9ccfd8;
+@define-color iris            #c4a7e7;
+@define-color highlight_low   #21202e;
+@define-color highlight_med   #403d52;
+@define-color highlight_high  #524f67;
+
 * {
-    /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: "JetBrainsMono Nerd Font", "CaskaydiaCove Nerd Font",
+                 "Symbols Nerd Font", FontAwesome, Roboto, sans-serif;
     font-size: 13px;
+    font-weight: 500;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
 }
 
 window#waybar {
-    background-color: rgba(43, 48, 59, 0.5);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: .5s;
+    background: transparent;
+    color: @text;
+    transition: background-color 0.3s ease;
 }
 
 window#waybar.hidden {
     opacity: 0.2;
 }
 
-/*
-window#waybar.empty {
+/* The bar itself — floating pill via padding on the outermost boxes */
+.modules-left,
+.modules-right {
+    background-color: alpha(@base, 0.85);
+    border-radius: 12px;
+    padding: 2px 2px;
+    margin: 4px 4px;
+    border: 1px solid alpha(@highlight_med, 0.6);
+}
+
+.modules-center {
+    /* transparent so an empty window module leaves no visible pill */
     background-color: transparent;
-}
-window#waybar.solo {
-    background-color: #FFFFFF;
-}
-*/
-
-window#waybar.termite {
-    background-color: #3F3F3F;
-}
-
-window#waybar.chromium {
-    background-color: #000000;
+    padding: 0;
+    margin: 4px 4px;
     border: none;
 }
 
-button {
-    /* Use box-shadow instead of border so the text isn't offset */
-    box-shadow: inset 0 -3px transparent;
-    /* Avoid rounded borders under each button name */
-    border: none;
-    border-radius: 0;
-}
+.modules-left  { margin-left: 4px; }
+.modules-right { margin-right: 4px; }
 
-/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
-button:hover {
-    background: inherit;
-    box-shadow: inset 0 -3px #ffffff;
-}
-
-/* you can set a style on hover for any module like this */
-#pulseaudio:hover {
-    background-color: #a37800;
-}
-
-#workspaces button {
-    padding: 0 5px;
-    background-color: transparent;
-    color: #ffffff;
-}
-
-#workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#workspaces button.active {
-    background-color: #64727D;
-    box-shadow: inset 0 -3px #ffffff;
-}
-
-#workspaces button.urgent {
-    background-color: #eb4d4b;
-}
-
-#mode {
-    background-color: #64727D;
-    box-shadow: inset 0 -3px #ffffff;
-}
-
+/* Base module styling */
+#workspaces,
+#submap,
+#scratchpad,
+#window,
 #clock,
 #battery,
 #cpu,
@@ -87,241 +71,265 @@ button:hover {
 #network,
 #pulseaudio,
 #wireplumber,
-#custom-media,
+#mpris,
+#custom-notification,
 #tray,
 #mode,
 #idle_inhibitor,
-#scratchpad,
 #power-profiles-daemon,
+#language,
+#keyboard-state,
 #mpd {
-    padding: 0 10px;
-    color: #ffffff;
+    padding: 0 9px;
+    margin: 2px 2px;
+    border-radius: 8px;
+    background-color: alpha(@overlay, 0.55);
+    color: @text;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-#window,
+/* Workspaces */
 #workspaces {
-    margin: 0 4px;
+    padding: 0 2px;
+    background-color: transparent;
+    margin: 2px 0;
 }
 
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-    margin-left: 0;
+#workspaces button {
+    padding: 0 7px;
+    margin: 2px 2px;
+    color: @subtle;
+    background-color: alpha(@overlay, 0.5);
+    border-radius: 7px;
+    transition: all 0.2s ease;
+    box-shadow: none;
+    min-height: 0;
 }
 
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right > widget:last-child > #workspaces {
-    margin-right: 0;
+#workspaces button:hover {
+    background-color: alpha(@highlight_high, 0.7);
+    color: @text;
+    box-shadow: none;
 }
 
+#workspaces button.active {
+    background-color: @iris;
+    color: @base;
+    padding: 0 14px;
+    box-shadow: none;
+}
+
+#workspaces button.urgent {
+    background-color: @love;
+    color: @base;
+}
+
+/* Window title — plain italic text, no pill. Empty title leaves nothing visible. */
+#window {
+    background-color: transparent;
+    border: none;
+    color: @text;
+    font-style: italic;
+    font-weight: 700;
+    padding: 0;
+    margin: 0;
+}
+
+/* Clock — front and center */
 #clock {
-    background-color: #64727D;
+    background-color: alpha(@iris, 0.18);
+    color: @iris;
+    font-weight: 600;
 }
 
+/* Battery */
 #battery {
-    background-color: #ffffff;
-    color: #000000;
+    color: @foam;
+    background-color: alpha(@foam, 0.15);
 }
 
-#battery.charging, #battery.plugged {
-    color: #ffffff;
-    background-color: #26A65B;
+#battery.warning {
+    color: @gold;
+    background-color: alpha(@gold, 0.18);
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @pine;
+    background-color: alpha(@pine, 0.25);
 }
 
 @keyframes blink {
     to {
-        background-color: #ffffff;
-        color: #000000;
+        background-color: @love;
+        color: @base;
     }
 }
 
-/* Using steps() instead of linear as a timing function to limit cpu usage */
 #battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
+    background-color: alpha(@love, 0.25);
+    color: @love;
     animation-name: blink;
-    animation-duration: 0.5s;
+    animation-duration: 0.8s;
     animation-timing-function: steps(12);
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
 
-#power-profiles-daemon {
-    padding-right: 15px;
-}
-
-#power-profiles-daemon.performance {
-    background-color: #f53c3c;
-    color: #ffffff;
-}
-
-#power-profiles-daemon.balanced {
-    background-color: #2980b9;
-    color: #ffffff;
-}
-
-#power-profiles-daemon.power-saver {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-label:focus {
-    background-color: #000000;
-}
-
-#cpu {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-#memory {
-    background-color: #9b59b6;
-}
-
-#disk {
-    background-color: #964B00;
-}
-
-#backlight {
-    background-color: #90b1b1;
-}
-
+/* Network */
 #network {
-    background-color: #2980b9;
+    color: @foam;
+    background-color: alpha(@foam, 0.15);
 }
 
 #network.disconnected {
-    background-color: #f53c3c;
+    color: @love;
+    background-color: alpha(@love, 0.18);
 }
 
+/* Audio */
 #pulseaudio {
-    background-color: #f1c40f;
-    color: #000000;
+    color: @gold;
+    background-color: alpha(@gold, 0.15);
+}
+
+#pulseaudio:hover {
+    background-color: alpha(@gold, 0.28);
 }
 
 #pulseaudio.muted {
-    background-color: #90b1b1;
-    color: #2a5c45;
+    color: @muted;
+    background-color: alpha(@overlay, 0.5);
 }
 
 #wireplumber {
-    background-color: #fff0f5;
-    color: #000000;
+    color: @gold;
+    background-color: alpha(@gold, 0.15);
 }
 
 #wireplumber.muted {
-    background-color: #f53c3c;
+    color: @love;
+    background-color: alpha(@love, 0.18);
 }
 
-#custom-media {
-    background-color: #66cc99;
-    color: #2a5c45;
-    min-width: 100px;
+/* Backlight */
+#backlight {
+    color: @rose;
+    background-color: alpha(@rose, 0.15);
 }
 
-#custom-media.custom-spotify {
-    background-color: #66cc99;
-}
-
-#custom-media.custom-vlc {
-    background-color: #ffa000;
-}
-
-#temperature {
-    background-color: #f0932b;
-}
-
+/* CPU / Memory / Temperature */
+#cpu        { color: @foam;  background-color: alpha(@foam,  0.15); }
+#memory     { color: @iris;  background-color: alpha(@iris,  0.15); }
+#disk       { color: @rose;  background-color: alpha(@rose,  0.15); }
+#temperature{ color: @pine;  background-color: alpha(@pine,  0.22); }
 #temperature.critical {
-    background-color: #eb4d4b;
+    color: @love;
+    background-color: alpha(@love, 0.22);
 }
 
+/* Media (mpris) */
+#mpris {
+    color: @rose;
+    background-color: alpha(@rose, 0.15);
+}
+
+#mpris.spotify { color: @foam; background-color: alpha(@foam, 0.15); }
+#mpris.vlc     { color: @gold; background-color: alpha(@gold, 0.15); }
+#mpris.paused  { color: @subtle; background-color: alpha(@overlay, 0.55); font-style: italic; }
+
+/* Tray */
 #tray {
-    background-color: #2980b9;
+    background-color: alpha(@overlay, 0.55);
 }
 
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
+#tray > .passive { -gtk-icon-effect: dim; }
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    background-color: #eb4d4b;
+    background-color: alpha(@love, 0.3);
 }
 
+/* Notification */
+#custom-notification {
+    font-family: "CaskaydiaCove Nerd Font", "JetBrainsMono Nerd Font",
+                 "Symbols Nerd Font", FontAwesome, sans-serif;
+    color: @rose;
+    background-color: alpha(@rose, 0.12);
+}
+
+/* Power profiles */
+#power-profiles-daemon.performance { color: @love; background-color: alpha(@love, 0.18); }
+#power-profiles-daemon.balanced    { color: @foam; background-color: alpha(@foam, 0.18); }
+#power-profiles-daemon.power-saver { color: @pine; background-color: alpha(@pine, 0.22); }
+
+/* Idle inhibitor */
 #idle_inhibitor {
-    background-color: #2d3436;
+    color: @subtle;
 }
 
 #idle_inhibitor.activated {
-    background-color: #ecf0f1;
-    color: #2d3436;
+    color: @gold;
+    background-color: alpha(@gold, 0.18);
 }
 
-#mpd {
-    background-color: #66cc99;
-    color: #2a5c45;
+/* Submap */
+#submap {
+    color: @iris;
+    background-color: alpha(@iris, 0.2);
+    font-style: italic;
 }
 
-#mpd.disconnected {
-    background-color: #f53c3c;
-}
-
-#mpd.stopped {
-    background-color: #90b1b1;
-}
-
-#mpd.paused {
-    background-color: #51a37a;
-}
-
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state {
-    background: #97e1ad;
-    color: #000000;
-    padding: 0 0px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state > label {
-    padding: 0 5px;
-}
-
-#keyboard-state > label.locked {
-    background: rgba(0, 0, 0, 0.2);
-}
-
+/* Scratchpad */
 #scratchpad {
-    background: rgba(0, 0, 0, 0.2);
+    background-color: alpha(@overlay, 0.5);
 }
 
 #scratchpad.empty {
-	background-color: transparent;
+    background-color: transparent;
 }
 
-#privacy {
-    padding: 0;
+/* Keyboard / language */
+#language {
+    color: @pine;
+    background-color: alpha(@pine, 0.22);
 }
 
+#keyboard-state {
+    color: @foam;
+    background-color: alpha(@foam, 0.15);
+}
+
+#keyboard-state > label.locked {
+    background: alpha(@base, 0.3);
+    border-radius: 6px;
+}
+
+/* MPD */
+#mpd              { color: @foam;  background-color: alpha(@foam, 0.15); }
+#mpd.disconnected { color: @love;  background-color: alpha(@love, 0.18); }
+#mpd.stopped      { color: @muted; background-color: alpha(@overlay, 0.5); }
+#mpd.paused       { color: @subtle; background-color: alpha(@overlay, 0.55); }
+
+/* Privacy */
+#privacy { padding: 0; }
 #privacy-item {
-    padding: 0 5px;
-    color: white;
+    padding: 0 8px;
+    margin: 2px 3px;
+    border-radius: 8px;
+    color: @text;
+}
+#privacy-item.screenshare { background-color: alpha(@gold, 0.25); color: @gold; }
+#privacy-item.audio-in    { background-color: alpha(@pine, 0.25); color: @foam; }
+#privacy-item.audio-out   { background-color: alpha(@foam, 0.25); color: @foam; }
+
+/* Tooltips */
+tooltip {
+    background: @base;
+    border: 1px solid @highlight_med;
+    border-radius: 10px;
 }
 
-#privacy-item.screenshare {
-    background-color: #cf5700;
-}
-
-#privacy-item.audio-in {
-    background-color: #1ca000;
-}
-
-#privacy-item.audio-out {
-    background-color: #0069d4;
+tooltip label {
+    color: @text;
+    padding: 4px;
 }
