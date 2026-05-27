@@ -1,7 +1,11 @@
 local cargo_bin = "/home/warre/.cargo/bin"
+local local_bin = "/home/warre/.local/bin"
 local path = os.getenv("PATH") or ""
 if not path:find(cargo_bin, 1, true) then
-	path = path .. ":" .. cargo_bin
+	path = cargo_bin .. ":" .. path
+end
+if not path:find(local_bin, 1, true) then
+	path = local_bin .. ":" .. path
 end
 
 local env = {

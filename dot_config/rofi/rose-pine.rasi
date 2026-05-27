@@ -1,0 +1,175 @@
+/**
+ * Rosé Pine theme for rofi drun
+ * Matches hyprland border palette (iris/foam) and swaync rounding/spacing
+ */
+
+* {
+    /* Rosé Pine palette */
+    base:           #191724;
+    surface:        #1f1d2e;
+    overlay:        #26233a;
+    muted:          #6e6a86;
+    subtle:         #908caa;
+    text:           #e0def4;
+    love:           #eb6f92;
+    gold:           #f6c177;
+    rose:           #ebbcba;
+    pine:           #31748f;
+    foam:           #9ccfd8;
+    iris:           #c4a7e7;
+    hl-low:         #21202e;
+    hl-med:         #403d52;
+    hl-high:        #524f67;
+
+    background-color: transparent;
+    text-color:       @text;
+
+    font: "Roboto 11";
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    width:            620px;
+    border:           2px;
+    border-radius:    8px;
+    border-color:     @iris;
+    background-color: #1f1d2ee6;
+    padding:          0;
+    children:         [ mainbox ];
+}
+
+mainbox {
+    spacing:  0;
+    padding:  0;
+    children: [ inputbar, message, listview ];
+}
+
+/* ============ Search bar ============ */
+
+inputbar {
+    background-color: @hl-low;
+    padding:          14px 18px;
+    spacing:          12px;
+    border:           0 0 1px 0;
+    border-color:     @hl-med;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    enabled:     true;
+    font:        "CaskaydiaCove Nerd Font 13";
+    text-color:  @iris;
+    str:         "";
+    vertical-align: 0.5;
+}
+
+entry {
+    placeholder:       "Search applications…";
+    placeholder-color: @muted;
+    text-color:        @text;
+    cursor:            text;
+    vertical-align:    0.5;
+}
+
+/* ============ Optional message line ============ */
+
+message {
+    padding:          8px 18px;
+    background-color: @hl-low;
+    border:           0 0 1px 0;
+    border-color:     @hl-med;
+}
+
+textbox {
+    text-color: @subtle;
+}
+
+/* ============ Results ============ */
+
+listview {
+    lines:        8;
+    columns:      1;
+    fixed-height: true;
+    cycle:        true;
+    scrollbar:    false;
+    padding:      8px 8px 10px 8px;
+    spacing:      2px;
+    dynamic:      true;
+}
+
+element {
+    padding:        8px 12px;
+    spacing:        12px;
+    border-radius:  8px;
+    cursor:         pointer;
+    children:       [ element-icon, element-text ];
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       @text;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @text;
+}
+
+element selected.normal {
+    background-color: @iris;
+    text-color:       @base;
+}
+
+element selected.active {
+    background-color: @foam;
+    text-color:       @base;
+}
+
+element normal.active {
+    background-color: transparent;
+    text-color:       @foam;
+}
+
+element-icon {
+    size:             28px;
+    cursor:           inherit;
+    vertical-align:   0.5;
+    background-color: transparent;
+}
+
+element-text {
+    cursor:           inherit;
+    vertical-align:   0.5;
+    text-color:       inherit;
+    background-color: transparent;
+}
+
+/* ============ rofi -show window etc. ============ */
+
+mode-switcher {
+    spacing:          0;
+    border:           1px 0 0 0;
+    border-color:     @hl-med;
+    background-color: @hl-low;
+}
+
+button {
+    padding:          8px;
+    text-color:       @muted;
+    background-color: transparent;
+    cursor:           pointer;
+}
+
+button selected {
+    text-color:       @iris;
+    background-color: @overlay;
+}
+
+error-message {
+    padding:          12px;
+    background-color: @surface;
+    text-color:       @love;
+    border-radius:    8px;
+}

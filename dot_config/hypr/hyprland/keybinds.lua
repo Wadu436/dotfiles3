@@ -54,6 +54,8 @@ hl.bind("SUPER + SHIFT + mouse:272", hl.dsp.window.resize(), { mouse = true }) -
 -- Utilities
 hl.bind("SUPER + D", uwsm_launch('rofi -show drun -show-icons -run-command "uwsm app -- {cmd}"')) -- Application launcher
 hl.bind("SUPER + Tab", uwsm_launch("rofi -show window -show-icons"))                              -- Application switcher
+hl.bind("SUPER + Period", uwsm_launch("rofi -modi emoji -show emoji"))                            -- Emoji picker
+hl.bind("SUPER + B", uwsm_launch("rofi-rbw"))                                                     -- Bitwarden picker
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshots
 hl.bind("SUPER + Pause", hl.dsp.exec_cmd("swaync-client -t -sw"))                                 -- Toggle notification panel
 

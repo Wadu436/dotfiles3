@@ -1,2 +1,13 @@
+configuration {
+    show-icons:           true;
+    icon-theme:           "Papirus-Dark";
+    drun-display-format:  "{name}";
+    display-drun:         "Apps";
+    display-window:       "Windows";
+    display-run:          "Run";
+    hover-select:         true;
+    me-select-entry:      "";
+    me-accept-entry:      "MousePrimary";
+}
 
-@theme "/usr/share/rofi/themes/Arc-Dark.rasi"
+@theme "~/.config/rofi/rose-pine.rasi"
