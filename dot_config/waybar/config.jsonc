@@ -161,7 +161,7 @@
       "warning": 30,
       "critical": 15
     },
-    "format": "{capacity}% {icon}",
+    "format": "{capacity}% {icon} ",
     "format-full": "{capacity}% {icon}",
     "format-charging": "{capacity}% ",
     "format-plugged": "{capacity}% ",
@@ -192,7 +192,7 @@
   },
   "network": {
     // "interface": "wlp2*", // (Optional) To force the use of this interface
-    "format-wifi": "{essid} ({signalStrength}%) ",
+    "format-wifi": "{essid} ({signalStrength}%)  ",
     "format-ethernet": "{ipaddr}/{cidr} ",
     "tooltip-format": "{ifname}: {ipaddr}/{cidr} via {gwaddr} ",
     "format-linked": "{ifname} (No IP) ",
@@ -201,11 +201,11 @@
   },
   "pulseaudio": {
     // "scroll-step": 1, // %, can be a float
-    "format": "{volume}% {icon} {format_source}",
-    "format-bluetooth": "{volume}% {icon} {format_source}",
-    "format-bluetooth-muted": " {icon} {format_source}",
+    "format": "{volume}% {icon} ",
+    "format-bluetooth": "{volume}% {icon}",
+    "format-bluetooth-muted": " {icon}",
     "format-muted": " {format_source}",
-    "format-source": "{volume}% ",
+    "format-source": " {volume}% ",
     "format-source-muted": "",
     "format-icons": {
       "headphone": "",
@@ -246,9 +246,14 @@
     "format": "{player_icon} {dynamic}",
     "format-paused": "{player_icon} {status_icon} {dynamic}",
     "format-stopped": "",
-    "status-icons": { "paused": "" },
+    "status-icons": {
+      "paused": ""
+    },
     "title-len": 60,
-    "dynamic-order": ["title", "artist"],
+    "dynamic-order": [
+      "title",
+      "artist"
+    ],
     "player-icons": {
       "spotify": "",
       "firefox": "",
