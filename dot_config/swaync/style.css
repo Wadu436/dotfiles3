@@ -1,0 +1,156 @@
+/* swaync — minimal structural styling; colors come from the GTK theme (Rose Pine) */
+
+/* Bump opacity on the main surfaces — Rose Pine renders quite translucent by default */
+.control-center {
+  background-color: alpha(@window_bg_color, 0.97);
+}
+
+.notification-content {
+  background-color: alpha(@window_bg_color, 0.95);
+}
+
+.widget-buttons-grid,
+.widget-mpris {
+  background-color: alpha(@card_bg_color, 0.7);
+}
+
+* {
+  font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+}
+
+/* ============ Notification popups ============ */
+
+.notification-row {
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification {
+  border-radius: 10px;
+  margin: 6px 12px;
+  padding: 0;
+}
+
+.notification-content {
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.summary {
+  font-weight: 600;
+}
+
+.time {
+  font-size: 11px;
+}
+
+.body {
+  margin-top: 4px;
+}
+
+.close-button {
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin: 0;
+}
+
+.notification-action {
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin: 4px 2px 0 2px;
+}
+
+/* ============ Control center panel ============ */
+
+.control-center {
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.control-center .notification {
+  margin: 4px 0;
+}
+
+.widget-title {
+  margin: 4px 8px 8px 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.widget-title > button {
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.widget-dnd {
+  margin: 4px 8px;
+  font-size: 13px;
+}
+
+.widget-dnd > switch {
+  border-radius: 12px;
+  min-height: 20px;
+  min-width: 40px;
+}
+
+.widget-dnd > switch slider {
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+/* mpris media widget */
+.widget-mpris {
+  border-radius: 10px;
+  padding: 8px;
+  margin: 4px 8px;
+}
+
+.widget-mpris-player {
+  padding: 4px;
+}
+
+.widget-mpris-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.widget-mpris-subtitle {
+  font-size: 11px;
+}
+
+.control-center-list-placeholder {
+  opacity: 0.5;
+  font-style: italic;
+  margin-top: 40px;
+}
+
+/* ============ Power buttons grid ============ */
+
+.widget-buttons-grid {
+  font-family: "CaskaydiaCove Nerd Font", "Symbols Nerd Font", FontAwesome, sans-serif;
+  padding: 8px;
+  margin: 8px;
+  border-radius: 10px;
+}
+
+.widget-buttons-grid > flowbox {
+  min-width: 100%;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild {
+  padding: 0;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  border-radius: 8px;
+  font-size: 14px;
+  margin: 4px;
+  padding: 12px 16px;
+  min-width: 160px;
+  min-height: 44px;
+}
