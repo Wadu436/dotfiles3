@@ -3,6 +3,9 @@
 
 source ~/.config/fish/functions.fish
 source ~/.config/fish/aliases.fish
+source ~/.config/fish/motd.fish
+source ~/.config/fish/chezmoi_motd.fish
+source ~/.config/fish/mise_motd.fish
 source ~/.config/fish/secrets.fish
 
 if status is-interactive
@@ -10,6 +13,9 @@ if status is-interactive
     if type -q atuin
         atuin init fish --disable-ctrl-r --disable-up-arrow | source
     end
+
+    motd_show chezmoi
+    motd_show mise
 end
 
 set -gx COREPACK_ENABLE_AUTO_PIN 0
