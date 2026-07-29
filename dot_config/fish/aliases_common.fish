@@ -52,6 +52,8 @@ alias exterminatus='massmurder && docker rm $(docker ps -a -q)'
 
 alias awslocal="AWS_REGION=us-east-1 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test aws --endpoint-url=http://localhost:4566"
 
+alias ops="opr"
+
 ## Abbreviations
 abbr --add h "history | grep"
 

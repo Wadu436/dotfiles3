@@ -199,18 +199,25 @@ function tokei-diff --description "Compare lines of code between two JJ commits 
     functions -e _cleanup
 end
 
-function claude-ws --description "Create a jj workspace in ~/workspaces and launch Claude Code in it"
-    set -l repo_name (basename (jj root 2>/dev/null))
-    if test -z "$repo_name"
+function claude-ws --description "Create a jj workspace in <repo>/.worktrees and launch Claude Code in it"
+    set -l repo_root (jj root 2>/dev/null)
+    if test -z "$repo_root"
         echo "Not inside a jj repository." >&2
         return 1
     end
+    set -l repo_name (basename "$repo_root")
 
     set -l hex (printf '%04x%04x' (random) (random))
     set -l ws_name "$repo_name-$hex"
-    set -l ws_path ~/workspaces/$ws_name
+    set -l ws_path "$repo_root/.worktrees/$ws_name"
 
-    mkdir -p ~/workspaces
+    # Keep workspace dirs out of the parent working copy's snapshots.
+    set -l ignore_file "$repo_root/.gitignore"
+    if not grep -qxF '.worktrees/' "$ignore_file" 2>/dev/null
+        printf '\n.worktrees/\n' >> "$ignore_file"
+    end
+
+    mkdir -p "$repo_root/.worktrees"
 
     if not jj workspace add --name "$ws_name" "$ws_path"
         return 1

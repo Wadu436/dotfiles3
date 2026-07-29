@@ -41,6 +41,6 @@ key = {{ .ssh_signing_key | quote }}
 [ui]
 editor = "nvim"
 merge-editor = "vscode"
-pager = ["delta", "--pager", "less -FR --mouse"]
+pager = ["delta", "--pager", "less -FRX --mouse"]
 # diff-formatter = ":git"
 diff-formatter = ["difft", "--color=always", "--syntax-highlight=off", "--sort-paths", "$left", "$right"]
