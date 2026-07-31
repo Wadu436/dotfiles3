@@ -91,6 +91,17 @@ function openremote
     open $remote
 end
 
+function openmr
+    if not jj root >/dev/null 2>&1
+        echo "Not inside a jj repository."
+        return 1
+    end
+
+    set branch (jj bookmark list --revision 'closest_bookmark(@)' --template "self.name()" | head -n 1)
+
+    glab mr view $branch --web
+end
+
 function tokei-diff --description "Compare lines of code between two JJ commits using tokei"
     set -l rev1 $argv[1]
     set -l rev2 $argv[2]
@@ -214,7 +225,7 @@ function claude-ws --description "Create a jj workspace in <repo>/.worktrees and
     # Keep workspace dirs out of the parent working copy's snapshots.
     set -l ignore_file "$repo_root/.gitignore"
     if not grep -qxF '.worktrees/' "$ignore_file" 2>/dev/null
-        printf '\n.worktrees/\n' >> "$ignore_file"
+        printf '\n.worktrees/\n' >>"$ignore_file"
     end
 
     mkdir -p "$repo_root/.worktrees"
@@ -225,4 +236,59 @@ function claude-ws --description "Create a jj workspace in <repo>/.worktrees and
 
     cd "$ws_path"
     claude
+end
+
+function jjunamend --description "Move edits accidentally amended into a pushed commit onto a new child commit"
+    set -l bm $argv[1]
+    set -l msg $argv[2]
+
+    if not jj root >/dev/null 2>&1
+        echo "Not inside a jj repository." >&2
+        return 1
+    end
+
+    # Default to the nearest bookmark at or below @
+    if test -z "$bm"
+        set bm (jj log -r 'closest_bookmark(@)' --no-graph \
+            -T 'local_bookmarks.map(|b| b.name()).join("\n") ++ "\n"' 2>/dev/null | string trim | head -n 1)
+    end
+
+    if test -z "$bm"
+        echo "jjunamend: no bookmark found — pass one explicitly." >&2
+        return 1
+    end
+
+    if not jj log -r "$bm@origin" --no-graph -T '""' >/dev/null 2>&1
+        echo "jjunamend: $bm has not been pushed (no $bm@origin)." >&2
+        return 1
+    end
+
+    if test -z (jj diff --from "$bm@origin" --to "$bm" --name-only | string collect)
+        echo "jjunamend: $bm already matches $bm@origin — nothing to split off." >&2
+        return 1
+    end
+
+    if test -z "$msg"
+        set msg "Follow-up change"
+    end
+
+    set -l old (jj log -r "$bm" --no-graph -T 'commit_id')
+
+    # Branch off the pushed commit itself rather than restoring the local one, so
+    # its commit id survives and the next push stays a fast-forward.
+    jj new "$bm@origin" -m "$msg"; or return 1
+    jj restore --from "$old" --into @; or return 1
+
+    set -l kids (jj log -r "$old+" --no-graph -T '"x\n"')
+    if test (count $kids) -gt 0
+        jj rebase -s "$old+" -d @; or return 1
+    end
+
+    # Sideways move: the new child descends from the pushed commit, not from the
+    # amended one the bookmark is currently on.
+    jj bookmark set "$bm" -r @ --allow-backwards; or return 1
+    jj abandon "$old"; or return 1
+
+    echo "Split the amendment onto a new child; $bm now points at it. 'jj undo' repeatedly to revert."
+    jj log
 end
