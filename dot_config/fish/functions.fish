@@ -97,7 +97,7 @@ function openmr
         return 1
     end
 
-    set branch (jj bookmark list --revision 'closest_bookmark(@)' --template "self.name()" | head -n 1)
+    set branch (jj bookmark list --revision 'closest_bookmark(@)' --template 'self.name() ++ "\n"' | head -n 1)
 
     glab mr view $branch --web
 end
@@ -237,6 +237,42 @@ function claude-ws --description "Create a jj workspace in <repo>/.worktrees and
     cd "$ws_path"
     claude
 end
+
+function rdo --description "Run a command in another repository's directory without leaving this one"
+    set -l repo $argv[1]
+    set -l cmd $argv[2..]
+
+    if test -z "$repo"
+        echo "usage: rdo <repo> <command...>" >&2
+        return 2
+    end
+
+    # An exact directory name wins outright, even when it prefixes other repos.
+    set -l name
+    if test -d ~/Repositories/$repo
+        set name ~/Repositories/$repo
+    else
+        set name (ls -d ~/Repositories/* | bfzf $repo)
+    end
+
+    if test -z "$name"
+        echo "No repository matching '$repo'." >&2
+        return 1
+    end
+
+    # No command: just report where it would have run.
+    if test (count $cmd) -eq 0
+        echo $name
+        return 0
+    end
+
+    pushd $name
+    $cmd
+    set -l rc $status
+    popd
+    return $rc
+end
+alias repodo rdo
 
 function jjunamend --description "Move edits accidentally amended into a pushed commit onto a new child commit"
     set -l bm $argv[1]

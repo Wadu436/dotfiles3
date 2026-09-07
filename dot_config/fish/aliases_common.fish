@@ -19,6 +19,9 @@ alias pip='uv pip'
 abbr --add activate 'source .venv/bin/activate.fish'
 
 alias repos="cd ~/Repositories; ls -d * | cdfzf"
+alias r=repos
+alias projects="cd ~/Projects; ls -d * | cdfzf"
+alias p=projects
 alias config="cd ~/.config/; ls -d * | cdfzf"
 
 ## Aliases
