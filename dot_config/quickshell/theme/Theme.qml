@@ -34,6 +34,9 @@ Singleton {
     // Island geometry. The island floats `gap` below the top edge, and windows
     // keep `gap` below the island, matching Hyprland's gaps_out.
     readonly property int gap: 6
+    // Horizontal inset of the edge pills; matches Hyprland's gaps_out so they
+    // line up with window edges.
+    readonly property int screenMargin: 4
     readonly property int idleHeight: 34
     readonly property int radius: 17
     readonly property int panelRadius: 22

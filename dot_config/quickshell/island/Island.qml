@@ -31,6 +31,40 @@ PanelWindow {
     readonly property bool pill: state === "idle" || state === "osd"
     // Games and fullscreen video only get interrupted by toasts/OSD/panels.
     readonly property bool hidden: fullscreen && state === "idle"
+    readonly property bool edgesHidden: fullscreen
+
+    // Left/right pills sharing the strip the island reserves anyway
+    component EdgePill: Rectangle {
+        default property alias content: inner.data
+        y: Theme.gap
+        width: inner.implicitWidth + 2 * Theme.padding
+        height: Theme.idleHeight
+        radius: height / 2
+        color: Theme.islandBg
+        border.width: 1
+        border.color: Theme.islandBorder
+        visible: opacity > 0
+        opacity: win.edgesHidden ? 0 : 1
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Theme.normal
+            }
+        }
+        Behavior on width {
+            NumberAnimation {
+                duration: Theme.normal
+                easing.type: Easing.OutQuint
+            }
+        }
+
+        Item {
+            id: inner
+            anchors.centerIn: parent
+            implicitWidth: childrenRect.width
+            implicitHeight: childrenRect.height
+        }
+    }
 
     readonly property Item current: {
         switch (state) {
@@ -63,11 +97,27 @@ PanelWindow {
     exclusionMode: ExclusionMode.Normal
     exclusiveZone: Theme.gap + Theme.idleHeight
 
+    // Input only lands on the island and the two edge pills.
     mask: Region {
         x: island.x
         y: island.y
         width: win.hidden ? 0 : island.width
         height: win.hidden ? 0 : island.height
+
+        Region {
+            intersection: Intersection.Combine
+            x: leftEdge.x
+            y: leftEdge.y
+            width: win.edgesHidden ? 0 : leftEdge.width
+            height: win.edgesHidden ? 0 : leftEdge.height
+        }
+        Region {
+            intersection: Intersection.Combine
+            x: rightEdge.x
+            y: rightEdge.y
+            width: win.edgesHidden ? 0 : rightEdge.width
+            height: win.edgesHidden ? 0 : rightEdge.height
+        }
     }
 
     // Clicking anywhere outside the island closes an open panel.
@@ -78,6 +128,26 @@ PanelWindow {
     }
 
     onPanelHereChanged: if (panelHere) island.forceActiveFocus()
+
+    EdgePill {
+        id: leftEdge
+        x: Theme.screenMargin
+        visible: opacity > 0 && title.toplevel !== null
+
+        WindowTitle {
+            id: title
+            monitor: win.monitor
+            // never run underneath the island
+            maxWidth: Math.max(0, island.x - 3 * Theme.screenMargin - 2 * Theme.padding - 24)
+        }
+    }
+
+    EdgePill {
+        id: rightEdge
+        x: win.width - width - Theme.screenMargin
+
+        StatusEdge {}
+    }
 
     Rectangle {
         id: island

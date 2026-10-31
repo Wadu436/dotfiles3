@@ -1,8 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
-import Quickshell.Services.SystemTray
 import qs.theme
 import qs.services
 import qs.widgets
@@ -264,61 +262,6 @@ Item {
                     from: 0
                     to: 1
                     duration: Theme.normal
-                }
-            }
-        }
-
-        // Tray
-        Flow {
-            visible: SystemTray.items.values.length > 0
-            Layout.fillWidth: true
-            Layout.topMargin: 4
-            spacing: 6
-
-            Repeater {
-                model: SystemTray.items
-
-                Rectangle {
-                    id: trayItem
-                    required property SystemTrayItem modelData
-                    implicitWidth: 34
-                    implicitHeight: 34
-                    radius: 10
-                    color: trayMouse.containsMouse ? Theme.highlightMed : Theme.overlay
-
-                    IconImage {
-                        anchors.centerIn: parent
-                        implicitSize: 18
-                        source: trayItem.modelData.icon
-                    }
-                    MouseArea {
-                        id: trayMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-                        onClicked: m => {
-                            const item = trayItem.modelData;
-                            if (m.button === Qt.MiddleButton) {
-                                item.secondaryActivate();
-                            } else if (m.button === Qt.RightButton || item.onlyMenu) {
-                                if (item.hasMenu)
-                                    menuAnchor.open();
-                            } else {
-                                item.activate();
-                            }
-                        }
-                    }
-
-                    QsMenuAnchor {
-                        id: menuAnchor
-                        menu: trayItem.modelData.menu
-                        anchor.item: trayItem
-                        anchor.edges: Edges.Bottom | Edges.Left
-                        anchor.gravity: Edges.Bottom | Edges.Right
-                        onVisibleChanged: Shell.menuOpen = visible
-                        Component.onDestruction: if (visible) Shell.menuOpen = false
-                    }
                 }
             }
         }

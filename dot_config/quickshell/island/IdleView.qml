@@ -25,10 +25,11 @@ Item {
         }
     }
 
-    // Scrolling anywhere on the pill walks through this monitor's workspaces
+    // Scrolling anywhere on the pill walks through this monitor's workspaces.
+    // Hyprland runs a Lua config, so dispatch takes a Lua dispatcher expression.
     WheelHandler {
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-        onWheel: e => Hyprland.dispatch("workspace " + (e.angleDelta.y > 0 ? "m-1" : "m+1"))
+        onWheel: e => Hyprland.dispatch(`hl.dsp.focus({ workspace = "${e.angleDelta.y > 0 ? "m-1" : "m+1"}" })`)
     }
 
     RowLayout {
