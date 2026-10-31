@@ -10,8 +10,10 @@ import Quickshell.Hyprland
 Singleton {
     id: root
 
-    // "" | "audio" | "media" | "calendar" | "dashboard"
+    // "" | "audio" | "media" | "dashboard" | "launcher"
     property string panel: ""
+    // Which launcher tab is showing: "apps" | "emoji" | "clips"
+    property string launcherMode: "apps"
     property string panelScreen: ""
 
     property bool osdVisible: false
@@ -67,9 +69,20 @@ Singleton {
             root.toggle("dashboard", "");
         }
 
-        // audio | media | calendar | dashboard
+        // audio | media | dashboard | launcher
         function togglePanel(name: string): void {
             root.toggle(name, "");
+        }
+
+        // apps | emoji | clips. Pressing the same key again closes it; another
+        // mode's key while open just switches tabs.
+        function launcher(mode: string): void {
+            if (root.panel === "launcher" && root.launcherMode === mode) {
+                root.close();
+                return;
+            }
+            root.launcherMode = mode;
+            root.open("launcher", "");
         }
 
         function closePanel(): void {

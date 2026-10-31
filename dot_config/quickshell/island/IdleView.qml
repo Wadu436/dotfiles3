@@ -48,12 +48,12 @@ Item {
             font.italic: true
         }
 
-        // Clock → calendar
+        // Clock → dashboard (notifications, media, stats, power)
         MouseArea {
             implicitWidth: clockRow.implicitWidth
             implicitHeight: Theme.idleHeight
             cursorShape: Qt.PointingHandCursor
-            onClicked: Shell.toggle("calendar", root.screenName)
+            onClicked: Shell.toggle("dashboard", root.screenName)
 
             RowLayout {
                 id: clockRow

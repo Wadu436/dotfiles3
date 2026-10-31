@@ -74,7 +74,7 @@ PanelWindow {
             return toast;
         case "audio":
         case "media":
-        case "calendar":
+        case "launcher":
         case "dashboard":
             return panelLoader;
         default:
@@ -93,7 +93,9 @@ PanelWindow {
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "quickshell:island"
-    WlrLayershell.keyboardFocus: panelHere ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+    // OnDemand, not Exclusive: Exclusive makes Hyprland drop the focus grab
+    // below. While the grab is active the keyboard comes to us anyway.
+    WlrLayershell.keyboardFocus: !panelHere ? WlrKeyboardFocus.None : WlrKeyboardFocus.OnDemand
     exclusionMode: ExclusionMode.Normal
     exclusiveZone: Theme.gap + Theme.idleHeight
 
@@ -242,8 +244,8 @@ PanelWindow {
                     return audioPanel;
                 case "media":
                     return mediaPanel;
-                case "calendar":
-                    return calendarPanel;
+                case "launcher":
+                    return launcher;
                 default:
                     return dashboard;
                 }
@@ -260,8 +262,8 @@ PanelWindow {
         MediaPanel {}
     }
     Component {
-        id: calendarPanel
-        CalendarPanel {}
+        id: launcher
+        Launcher {}
     }
     Component {
         id: dashboard

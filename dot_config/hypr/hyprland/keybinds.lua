@@ -52,16 +52,17 @@ hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })           -
 hl.bind("SUPER + SHIFT + mouse:272", hl.dsp.window.resize(), { mouse = true }) -- Resize window by dragging with SUPER + SHIFT + LMB
 
 -- Utilities
-hl.bind("SUPER + D", uwsm_launch('rofi -show drun -show-icons -run-command "uwsm app -- {cmd}"')) -- Application launcher
+hl.bind("SUPER + D", hl.dsp.exec_cmd("qs ipc call shell launcher apps"))                         -- Application launcher (Quickshell island)
 hl.bind("SUPER + Tab", uwsm_launch("rofi -show window -show-icons"))                              -- Application switcher
-hl.bind("SUPER + Period", uwsm_launch("rofi -modi emoji -show emoji"))                            -- Emoji picker
+hl.bind("SUPER + Period", hl.dsp.exec_cmd("qs ipc call shell launcher emoji"))                    -- Emoji picker (Quickshell island)
 hl.bind("SUPER + B", uwsm_launch("rofi-rbw"))                                                     -- Bitwarden picker
 hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-monitor.sh"))                 -- Screenshot the focused monitor
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshot a region (freezes, then crops)
 hl.bind("SUPER + Pause", hl.dsp.exec_cmd("qs ipc call shell toggleDashboard"))                    -- Toggle dashboard (Quickshell island)
 
+-- clipse records clipboard history; the Quickshell launcher's clipboard tab reads it
 hl.on("hyprland.start", function() hl.dispatch(uwsm_launch("clipse -listen")) end)
-hl.bind("SUPER + V", uwsm_launch("kitty --class clipse -e clipse")) -- Clipboard manager
+hl.bind("SUPER + V", hl.dsp.exec_cmd("qs ipc call shell launcher clips")) -- Clipboard history (Quickshell island)
 
 -- Launch things
 hl.bind("SUPER + Return", uwsm_launch("kitty")) -- Terminal

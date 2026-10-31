@@ -21,6 +21,7 @@ Singleton {
     readonly property string bell: g(0xF009A)
     readonly property string bellOff: g(0xF009B)
     readonly property string close: g(0xF0156)
+    readonly property string search: g(0xF0349)
 
     readonly property string music: g(0xF075A)
     readonly property string play: g(0xF040A)

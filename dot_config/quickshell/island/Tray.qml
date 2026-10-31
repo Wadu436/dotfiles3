@@ -4,6 +4,7 @@ import Quickshell.Widgets
 import Quickshell.Services.SystemTray
 import qs.theme
 import qs.services
+import qs.widgets
 
 // System tray icons. Left click activates, middle click is the secondary
 // action, right click (or any click on menu-only items) opens the menu.
@@ -57,6 +58,10 @@ Row {
                         item.activate();
                     }
                 }
+            }
+
+            HoverTip {
+                text: menuAnchor.visible ? "" : (trayItem.modelData.tooltipTitle || trayItem.modelData.title || trayItem.modelData.id)
             }
 
             QsMenuAnchor {
