@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Window
 
 // SDDM login screen in the style of the Quickshell island and hyprlock:
 // blurred wallpaper, big centered clock, a pill password field with the
@@ -20,11 +19,6 @@ Rectangle {
     readonly property color iris: "#c4a7e7"
     readonly property color highlightMed: "#403d52"
     readonly property string font: config.font || "JetBrainsMono Nerd Font"
-
-    // The greeter runs without Hyprland's color management, so wide-gamut
-    // panels show the wallpaper oversaturated; tone those down further.
-    // theme.conf's wideGamutScreens lists output names or WxH resolutions.
-    readonly property bool wideGamut: (config.wideGamutScreens || "").split(",").map(s => s.trim()).some(s => s !== "" && (s === Screen.name || s === Screen.width + "x" + Screen.height))
 
     property int userIndex: Math.max(0, users.findIndex(u => u.name === userModel.lastUser))
     property int sessionIndex: sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
@@ -102,7 +96,6 @@ Rectangle {
         blur: 0.5
         blurMax: 32
         brightness: -0.2
-        saturation: root.wideGamut ? -0.6 : -0.3
     }
 
     // Clock + date
