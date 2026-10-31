@@ -26,9 +26,12 @@ Item {
         return Quickshell.iconPath(entry?.icon ?? appId, "application-x-executable");
     }
 
-    // Distinct app ids on a workspace, in window order
+    // Distinct app ids on a workspace, in window order. Only windows with a
+    // live Wayland handle count: Hyprland's toplevel list can briefly keep
+    // closed or moved-away windows (file pickers, popups), and their stale
+    // class would put a random icon on an empty workspace.
     function appsOn(ws: HyprlandWorkspace): list<string> {
-        const ids = ws.toplevels.values.map(t => t.wayland?.appId ?? t.lastIpcObject?.class ?? "").filter(id => id !== "");
+        const ids = ws.toplevels.values.map(t => t.wayland?.appId ?? "").filter(id => id !== "");
         return [...new Set(ids)];
     }
 

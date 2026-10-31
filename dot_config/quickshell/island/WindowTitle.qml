@@ -22,9 +22,9 @@ RowLayout {
         const active = Hyprland.activeToplevel;
         if (active && active.workspace === workspace)
             return active;
-        return workspace?.toplevels.values[0] ?? null;
+        return workspace?.toplevels.values.find(t => t.wayland) ?? null;
     }
-    readonly property string appId: toplevel?.wayland?.appId ?? toplevel?.lastIpcObject?.class ?? ""
+    readonly property string appId: toplevel?.wayland?.appId ?? ""
 
     visible: toplevel !== null
     spacing: 8
