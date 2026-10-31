@@ -63,6 +63,28 @@ RowLayout {
         }
     }
 
+    Item {
+        implicitWidth: memRow.implicitWidth
+        implicitHeight: memRow.implicitHeight
+
+        RowLayout {
+            id: memRow
+            spacing: 6
+            Glyph {
+                text: Icons.memory
+                color: Theme.muted
+                size: 14
+            }
+            Label {
+                text: root.pct(SysStats.mem)
+                color: SysStats.mem >= 0.9 ? Theme.love : SysStats.mem >= 0.75 ? Theme.gold : Theme.subtle
+            }
+        }
+        HoverTip {
+            text: "<b>RAM</b> in use<br>" + SysStats.memUsedGb.toFixed(1) + " of " + Math.round(SysStats.memTotalGb) + " GB"
+        }
+    }
+
     Glyph {
         text: Network.type === "wifi" ? Icons.wifi : Network.online ? Icons.ethernet : Icons.offline
         color: Network.online ? Theme.subtle : Theme.love
