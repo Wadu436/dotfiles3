@@ -124,7 +124,7 @@ Rectangle {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: Qt.formatDate(now.date, "dddd d MMMM")
-            color: root.subtle
+            color: root.text
             font.family: root.font
             font.pixelSize: 20
         }
