@@ -46,12 +46,9 @@ Item {
             active: root.notif !== null
             sourceComponent: NotifCard {
                 notif: root.notif
-                onActionInvoked: Notifs.dropPopup(notif)
-
-                // Clicking the body just puts it away; it stays in history
-                TapHandler {
-                    onTapped: Notifs.dropPopup(parent.notif)
-                }
+                // Clicked (action or body): put the toast away. Without a
+                // default action it simply stays in history.
+                onActivated: Notifs.dropPopup(notif)
             }
         }
 

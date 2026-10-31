@@ -35,7 +35,20 @@ Rectangle {
         return notif.appIcon.startsWith("/") ? "file://" + notif.appIcon : "";
     }
 
-    signal actionInvoked
+    // "default" is what a click on the notification itself should do (kitty:
+    // focus the window that sent it), so it isn't shown as a button.
+    readonly property var defaultAction: notif.actions.find(a => a.identifier === "default") ?? null
+    readonly property var buttons: notif.actions.filter(a => a.identifier !== "default")
+
+    // Emitted on any click on the card or one of its buttons; `ranAction` is
+    // false for a body click on a notification without a default action.
+    signal activated(bool ranAction)
+
+    function invoke(action: var): void {
+        if (action)
+            action.invoke();
+        root.activated(action !== null);
+    }
 
     implicitHeight: layout.implicitHeight + 2 * 12
     radius: 14
@@ -45,6 +58,14 @@ Rectangle {
 
     HoverHandler {
         id: hover
+    }
+
+    // Body click → default action. Declared before the content, so the close
+    // and action buttons (inside the content) sit on top and win their clicks.
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: root.defaultAction ? Qt.PointingHandCursor : Qt.ArrowCursor
+        onClicked: root.invoke(root.defaultAction)
     }
 
     RowLayout {
@@ -136,10 +157,10 @@ Rectangle {
             RowLayout {
                 Layout.fillWidth: true
                 Layout.topMargin: 6
-                visible: root.notif.actions.length > 0
+                visible: root.buttons.length > 0
                 spacing: 6
                 Repeater {
-                    model: root.notif.actions
+                    model: root.buttons
                     Rectangle {
                         id: action
                         required property NotificationAction modelData
@@ -159,10 +180,7 @@ Rectangle {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                action.modelData.invoke();
-                                root.actionInvoked();
-                            }
+                            onClicked: root.invoke(action.modelData)
                         }
                     }
                 }

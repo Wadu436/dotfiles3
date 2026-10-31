@@ -254,6 +254,11 @@ Item {
                 width: list.width
                 notif: modelData
                 compact: true
+                // get out of the way of whatever the action focused/opened
+                onActivated: ranAction => {
+                    if (ranAction)
+                        Shell.close();
+                }
             }
 
             add: Transition {
