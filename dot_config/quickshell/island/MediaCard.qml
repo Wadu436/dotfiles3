@@ -30,7 +30,7 @@ RowLayout {
         implicitWidth: 84
         implicitHeight: 84
         radius: 12
-        color: Theme.overlay
+        color: Theme.tile
         clip: true
 
         Image {

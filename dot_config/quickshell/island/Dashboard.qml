@@ -21,7 +21,7 @@ Item {
         Layout.fillWidth: true
         implicitHeight: inner.implicitHeight + 2 * pad
         radius: 16
-        color: Theme.surface
+        color: Theme.card
         ColumnLayout {
             id: inner
             anchors.fill: parent
@@ -42,7 +42,7 @@ Item {
         Layout.fillWidth: true
         implicitHeight: 54
         radius: 14
-        color: armed ? Theme.love : pbMouse.containsMouse ? Theme.highlightMed : Theme.overlay
+        color: armed ? Theme.love : pbMouse.containsMouse ? Theme.highlightMed : Theme.tile
 
         Behavior on color {
             ColorAnimation {
@@ -137,7 +137,7 @@ Item {
                     implicitWidth: dndRow.implicitWidth + 24
                     implicitHeight: 30
                     radius: 15
-                    color: Notifs.dnd ? Theme.iris : dndMouse.containsMouse ? Theme.highlightMed : Theme.overlay
+                    color: Notifs.dnd ? Theme.iris : dndMouse.containsMouse ? Theme.highlightMed : Theme.tile
                     RowLayout {
                         id: dndRow
                         anchors.centerIn: parent

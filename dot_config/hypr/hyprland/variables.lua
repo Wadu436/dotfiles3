@@ -35,12 +35,19 @@ hl.config({
 			color = "rgba(191724ee)", -- Rosé Pine base
 		},
 
+		-- Frosted glass: big, smooth blur, slightly darkened for text contrast,
+		-- with a little grain so large flat areas don't band. Also behind
+		-- popups/menus, and the Quickshell island (see windowrules.lua).
 		blur = {
 			enabled = true,
-			size = 3,
-			passes = 1,
-
-			vibrancy = 0.1696,
+			size = 8,
+			passes = 3,
+			noise = 0.02,
+			contrast = 1.0,
+			brightness = 0.85,
+			vibrancy = 0.2,
+			vibrancy_darkness = 0.2,
+			popups = true,
 		},
 	},
 	dwindle = {

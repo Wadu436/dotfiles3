@@ -237,7 +237,7 @@ Item {
             Layout.fillWidth: true
             implicitHeight: 44
             radius: 14
-            color: Theme.surface
+            color: Theme.card
 
             RowLayout {
                 anchors.fill: parent
@@ -391,7 +391,7 @@ Item {
                             anchors.fill: parent
                             visible: root.mode === "clips"
                             radius: 8
-                            color: Theme.overlay
+                            color: Theme.tile
                             clip: true
 
                             Image {

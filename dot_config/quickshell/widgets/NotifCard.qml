@@ -52,7 +52,7 @@ Rectangle {
 
     implicitHeight: layout.implicitHeight + 2 * 12
     radius: 14
-    color: compact ? Theme.surface : "transparent"
+    color: compact ? Theme.card : "transparent"
     border.width: notif.urgency === NotificationUrgency.Critical ? 1 : 0
     border.color: Theme.love
 
@@ -80,7 +80,7 @@ Rectangle {
             implicitWidth: 36
             implicitHeight: 36
             radius: 10
-            color: Theme.overlay
+            color: Theme.tile
 
             IconImage {
                 id: appIcon
@@ -167,7 +167,7 @@ Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: 28
                         radius: 8
-                        color: actionMouse.containsMouse ? Theme.highlightMed : Theme.overlay
+                        color: actionMouse.containsMouse ? Theme.highlightMed : Theme.tile
                         Label {
                             anchors.centerIn: parent
                             width: parent.width - 12

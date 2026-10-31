@@ -86,7 +86,7 @@ Item {
                 Layout.leftMargin: 42
                 implicitHeight: 30
                 radius: 8
-                color: choiceMouse.containsMouse ? Theme.highlightMed : current ? Theme.overlay : "transparent"
+                color: choiceMouse.containsMouse ? Theme.highlightMed : current ? Theme.tile : "transparent"
                 Label {
                     anchors.fill: parent
                     anchors.leftMargin: 10
