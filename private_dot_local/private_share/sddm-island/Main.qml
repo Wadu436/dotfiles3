@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Effects
 
 // SDDM login screen in the style of the Quickshell island and hyprlock:
-// blurred wallpaper, big centered clock, a pill password field with the
-// iris → foam ring, and session/power controls in a pill at the bottom.
+// blurred wallpaper with a darker column on the left holding the clock,
+// date, user, password field and session/power controls.
 Rectangle {
     id: root
 
@@ -99,31 +99,6 @@ Rectangle {
         brightness: -0.2
     }
 
-    // Clock + date
-    Column {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: center.top
-        anchors.bottomMargin: 40
-        spacing: 4
-
-        Text {
-            id: clock
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatTime(now.date, "HH:mm")
-            color: root.text
-            font.family: root.font
-            font.pixelSize: 120
-            font.weight: Font.ExtraBold
-        }
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatDate(now.date, "dddd d MMMM")
-            color: root.text
-            font.family: root.font
-            font.pixelSize: 20
-        }
-    }
-
     Timer {
         id: now
         property date date: new Date()
@@ -133,98 +108,132 @@ Rectangle {
         onTriggered: date = new Date()
     }
 
-    // User + password
-    Column {
-        id: center
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: 60
-        spacing: 16
+    // Sidebar: a darker full-height column on the left holding everything
+    Rectangle {
+        id: sidebar
 
-        // Name; click to switch user when there are several
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: root.user.realName || root.user.name
-            color: root.text
-            font.family: root.font
-            font.pixelSize: 18
-            font.bold: true
-            MouseArea {
-                anchors.fill: parent
-                enabled: root.users.length > 1
-                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                onClicked: root.userIndex = (root.userIndex + 1) % root.users.length
+        readonly property int pad: 56
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        width: 460
+        color: Qt.alpha(root.base, 0.72)
+
+        // Clock, date, user, password — vertically centered
+        Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: sidebar.pad
+            anchors.rightMargin: sidebar.pad
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 0
+
+            Text {
+                text: Qt.formatTime(now.date, "HH:mm")
+                color: root.text
+                font.family: root.font
+                font.pixelSize: 96
+                font.weight: Font.ExtraBold
             }
-        }
-
-        // Password field: dark fill with a thin solid outline that turns
-        // love on a wrong password and gold with caps lock on
-        Item {
-            id: field
-            width: 340
-            height: 54
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            SequentialAnimation {
-                id: shake
-                NumberAnimation { target: field; property: "anchors.horizontalCenterOffset"; to: -12; duration: 50 }
-                NumberAnimation { target: field; property: "anchors.horizontalCenterOffset"; to: 12; duration: 70 }
-                NumberAnimation { target: field; property: "anchors.horizontalCenterOffset"; to: -8; duration: 60 }
-                NumberAnimation { target: field; property: "anchors.horizontalCenterOffset"; to: 0; duration: 50 }
+            Text {
+                text: Qt.formatDate(now.date, "dddd d MMMM")
+                color: root.subtle
+                font.family: root.font
+                font.pixelSize: 20
             }
 
-            Rectangle {
-                anchors.fill: parent
-                radius: 12
-                color: Qt.alpha(root.base, 0.85)
-                border.width: 2
-                border.color: root.failed ? root.love : keyboard.capsLock ? root.gold : root.highlightHigh
+            Item {
+                width: 1
+                height: 64
             }
 
-            TextInput {
-                id: password
-                anchors.fill: parent
-                anchors.leftMargin: 26
-                anchors.rightMargin: 26
-                verticalAlignment: TextInput.AlignVCenter
-                horizontalAlignment: TextInput.AlignHCenter
-                echoMode: TextInput.Password
-                passwordCharacter: "•"
+            // Name; click to switch user when there are several
+            Text {
+                text: root.user.realName || root.user.name
                 color: root.text
                 font.family: root.font
                 font.pixelSize: 18
-                font.letterSpacing: 4
-                focus: true
-                clip: true
-                enabled: !root.busy
-                onAccepted: root.login()
-                onTextEdited: root.failed = false
+                font.bold: true
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: root.users.length > 1
+                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    onClicked: root.userIndex = (root.userIndex + 1) % root.users.length
+                }
+            }
 
-                Text {
-                    anchors.centerIn: parent
-                    visible: password.text === ""
-                    text: root.busy ? "signing in…" : root.failed ? "wrong password" : keyboard.capsLock ? "caps lock is on" : "password"
-                    color: root.failed ? root.love : keyboard.capsLock ? root.gold : root.muted
+            Item {
+                width: 1
+                height: 14
+            }
+
+            // Password field: dark fill with a thin solid outline that turns
+            // love on a wrong password and gold with caps lock on
+            Item {
+                id: field
+                width: parent.width
+                height: 54
+
+                SequentialAnimation {
+                    id: shake
+                    NumberAnimation { target: field; property: "x"; to: -12; duration: 50 }
+                    NumberAnimation { target: field; property: "x"; to: 12; duration: 70 }
+                    NumberAnimation { target: field; property: "x"; to: -8; duration: 60 }
+                    NumberAnimation { target: field; property: "x"; to: 0; duration: 50 }
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: 12
+                    color: Qt.alpha(root.base, 0.85)
+                    border.width: 2
+                    border.color: root.failed ? root.love : keyboard.capsLock ? root.gold : root.highlightHigh
+
+                    Behavior on border.color {
+                        ColorAnimation {
+                            duration: 150
+                        }
+                    }
+                }
+
+                TextInput {
+                    id: password
+                    anchors.fill: parent
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    verticalAlignment: TextInput.AlignVCenter
+                    echoMode: TextInput.Password
+                    passwordCharacter: "•"
+                    color: root.text
                     font.family: root.font
-                    font.pixelSize: 15
-                    font.letterSpacing: 0
+                    font.pixelSize: 18
+                    font.letterSpacing: 4
+                    focus: true
+                    clip: true
+                    enabled: !root.busy
+                    onAccepted: root.login()
+                    onTextEdited: root.failed = false
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: password.text === ""
+                        text: root.busy ? "signing in…" : root.failed ? "wrong password" : keyboard.capsLock ? "caps lock is on" : "password"
+                        color: root.failed ? root.love : keyboard.capsLock ? root.gold : root.muted
+                        font.family: root.font
+                        font.pixelSize: 15
+                        font.letterSpacing: 0
+                    }
                 }
             }
         }
-    }
 
-    // Bottom pill: session (click to cycle) + power
-    Rectangle {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 30
-        width: bottomRow.implicitWidth + 28
-        height: 40
-        radius: 20
-        color: Qt.alpha(root.base, 0.7)
-
+        // Session (click to cycle) + power, along the bottom of the column
         Row {
-            id: bottomRow
-            anchors.centerIn: parent
+            anchors.left: parent.left
+            anchors.leftMargin: sidebar.pad
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 40
             spacing: 18
 
             Text {
