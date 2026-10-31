@@ -4,7 +4,7 @@ import qs.theme
 import qs.services
 import qs.widgets
 
-// Right-edge pill: CPU/GPU/RAM sparklines, network, tray and the date. Hover
+// Right-edge pill: CPU/GPU/RAM/network sparklines, tray and the date. Hover
 // any of them for the exact numbers / a plain-language explanation.
 RowLayout {
     id: root
@@ -27,6 +27,11 @@ RowLayout {
         required property list<real> values
         required property color lineColor
         required property string tip
+        // optional second line (network: upload) and scale (default 0..1)
+        property list<real> values2: []
+        property color lineColor2: Theme.rose
+        property real max: 1
+        property color labelColor: Theme.muted
 
         implicitWidth: statRow.implicitWidth
         implicitHeight: statRow.implicitHeight
@@ -37,14 +42,17 @@ RowLayout {
             Label {
                 anchors.verticalCenter: parent.verticalCenter
                 text: stat.label
-                color: Theme.muted
+                color: stat.labelColor
                 font.pixelSize: Theme.fontSizeSmall
             }
             Sparkline {
                 anchors.verticalCenter: parent.verticalCenter
                 values: stat.values
+                values2: stat.values2
                 capacity: SysStats.historyLength
                 color: stat.lineColor
+                color2: stat.lineColor2
+                max: stat.max
             }
         }
         HoverTip {
@@ -77,13 +85,17 @@ RowLayout {
         tip: "<b>RAM</b> in use<br>" + SysStats.memUsedGb.toFixed(1) + " of " + Math.round(SysStats.memTotalGb) + " GB (" + root.pct(SysStats.mem) + ")"
     }
 
-    Glyph {
-        text: Network.type === "wifi" ? Icons.wifi : Network.online ? Icons.ethernet : Icons.offline
-        color: Network.online ? Theme.subtle : Theme.love
-        size: 14
-        HoverTip {
-            text: Network.online ? "<b>" + (Network.type === "wifi" ? "Wi-Fi" : "Ethernet") + "</b><br>" + Network.name : "<b>Offline</b>"
-        }
+    // Download (foam) and upload (rose), scaled to the busiest moment of the
+    // last minute but never below 64 KB/s, so idle chatter stays flat.
+    Stat {
+        label: "net"
+        labelColor: Network.online ? Theme.muted : Theme.love
+        values: SysStats.rxHistory
+        lineColor: Theme.foam
+        values2: SysStats.txHistory
+        lineColor2: Theme.rose
+        max: Math.max(65536, ...SysStats.rxHistory, ...SysStats.txHistory)
+        tip: (Network.online ? "<b>" + (Network.type === "wifi" ? "Wi-Fi" : "Ethernet") + "</b> · " + Network.name : "<b>Offline</b>") + "<br><font color=\"" + Theme.foam + "\">↓</font> " + SysStats.rate(SysStats.rxRate) + "   <font color=\"" + Theme.rose + "\">↑</font> " + SysStats.rate(SysStats.txRate)
     }
 
     Tray {
