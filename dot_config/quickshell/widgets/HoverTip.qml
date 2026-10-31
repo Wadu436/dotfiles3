@@ -48,8 +48,6 @@ Item {
         height: label.implicitHeight + 12
         radius: 10
         color: Theme.islandBg
-        border.width: 1
-        border.color: Theme.islandBorder
         opacity: shown ? 1 : 0
         visible: opacity > 0
 

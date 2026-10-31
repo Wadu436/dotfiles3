@@ -44,8 +44,6 @@ PanelWindow {
         topLeftRadius: 0
         topRightRadius: 0
         color: Theme.islandBg
-        border.width: 1
-        border.color: Theme.islandBorder
         visible: opacity > 0
         opacity: win.edgesHidden ? 0 : 1
 
@@ -167,8 +165,9 @@ PanelWindow {
         topLeftRadius: 0
         topRightRadius: 0
         color: Theme.islandBg
-        border.width: 1
-        border.color: Shell.submap !== "" ? Theme.gold : Theme.islandBorder
+        // No outline normally; gold while a Hyprland submap is active
+        border.width: Shell.submap !== "" ? 1 : 0
+        border.color: Theme.gold
         clip: true
 
         opacity: win.hidden ? 0 : 1
@@ -203,11 +202,6 @@ PanelWindow {
             NumberAnimation {
                 duration: Theme.normal
                 easing.type: Easing.OutQuint
-            }
-        }
-        Behavior on border.color {
-            ColorAnimation {
-                duration: Theme.normal
             }
         }
 
