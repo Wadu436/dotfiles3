@@ -13,6 +13,11 @@ install -m 644 "$src/Main.qml" "$src/metadata.desktop" "$src/theme.conf" "$dest/
 magick "$wallpaper" -resize '3440x1440^' -quality 90 "$dest/background.jpg"
 chmod 644 "$dest/background.jpg"
 
+# Monitor layout for the greeter's X server (see Xsetup)
+install -m 755 "$src/Xsetup" "$dest/Xsetup"
+install -d /etc/sddm.conf.d
+printf '[X11]\nDisplayCommand=%s\n' "$dest/Xsetup" > /etc/sddm.conf.d/island-xsetup.conf
+
 install -d /etc/sddm.conf.d
 printf '[Theme]\nCurrent=island\n' > /etc/sddm.conf.d/theme.conf
 # /etc/sddm.conf wins over conf.d, so switch its theme line too if it has one

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Xsetup for the Island SDDM theme; SDDM runs it as root before the login
+# screen appears. Without it Xorg stacks every monitor at 0,0, so the greeter
+# windows overlap and the wallpaper looks stretched. Lay them out like
+# Hyprland's monitors.lua: DP-3 on the left, the ultrawide DP-1 to its right.
+if xrandr | grep -q '^DP-3 connected'; then
+    xrandr --output DP-1 --auto --primary --output DP-3 --auto --left-of DP-1
+else
+    xrandr --output DP-1 --auto --primary
+fi
+
+# Keep whatever the stock script does (currently nothing)
+. /usr/share/sddm/scripts/Xsetup
