@@ -22,6 +22,9 @@ Item {
 
     // App id → themed icon, via its .desktop entry when there is one
     function iconFor(appId: string): string {
+        // heuristicLookup("") returns an arbitrary entry, hence the guard
+        if (!appId)
+            return "";
         const entry = DesktopEntries.heuristicLookup(appId);
         return Quickshell.iconPath(entry?.icon ?? appId, "application-x-executable");
     }
@@ -30,8 +33,10 @@ Item {
     // live Wayland handle count: Hyprland's toplevel list can briefly keep
     // closed or moved-away windows (file pickers, popups), and their stale
     // class would put a random icon on an empty workspace.
-    function appsOn(ws: HyprlandWorkspace): list<string> {
-        const ids = ws.toplevels.values.map(t => t.wayland?.appId ?? "").filter(id => id !== "");
+    // Plain JS array on purpose: a `list<string>` return type turned an empty
+    // result into [""], which drew a random icon on empty workspaces.
+    function appsOn(ws: HyprlandWorkspace): var {
+        const ids = ws.toplevels.values.map(t => t.wayland?.appId ?? "").filter(id => !!id);
         return [...new Set(ids)];
     }
 
@@ -93,7 +98,7 @@ Item {
                 required property HyprlandWorkspace modelData
                 readonly property bool active: root.monitor?.activeWorkspace === modelData
                 readonly property bool urgent: modelData.urgent ?? false
-                readonly property list<string> apps: root.appsOn(modelData)
+                readonly property var apps: root.appsOn(modelData)
 
                 width: content.implicitWidth + 16
                 height: 24
