@@ -99,10 +99,10 @@ Rectangle {
         anchors.fill: parent
         source: wallpaper
         blurEnabled: true
-        blur: 1.0
-        blurMax: 64
-        brightness: -0.45
-        saturation: root.wideGamut ? -0.45 : -0.15
+        blur: 0.5
+        blurMax: 32
+        brightness: -0.2
+        saturation: root.wideGamut ? -0.6 : -0.3
     }
 
     // Clock + date
@@ -162,7 +162,7 @@ Rectangle {
             }
         }
 
-        // Pill with a gradient ring: a gradient rectangle behind a slightly
+        // Field with a gradient ring: a gradient rectangle behind a slightly
         // smaller fill
         Item {
             id: field
@@ -180,7 +180,7 @@ Rectangle {
 
             Rectangle {
                 anchors.fill: parent
-                radius: height / 2
+                radius: 12
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
                     GradientStop {
@@ -196,7 +196,7 @@ Rectangle {
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: 2
-                radius: height / 2
+                radius: 10
                 color: Qt.alpha(root.base, 0.85)
             }
 
