@@ -37,7 +37,7 @@ Item {
         {
             id: "passwords",
             label: "Passwords",
-            placeholder: "Search vault…  (Shift+Enter copies the username)"
+            placeholder: "Search vault…  (→ all fields, Shift+Enter username)"
         }
     ]
     readonly property string mode: Shell.launcherMode
@@ -53,7 +53,7 @@ Item {
         case "windows":
             return Windows.search(input.text, 8);
         case "passwords":
-            return Passwords.search(input.text, 8);
+            return Passwords.fieldsOf ? Passwords.searchFields(input.text, 8) : Passwords.search(input.text, 8);
         default:
             return Apps.search(input.text, 8);
         }
@@ -74,7 +74,10 @@ Item {
             Windows.pick(item);
             break;
         case "passwords":
-            Passwords.pick(item, alt);
+            if (Passwords.fieldsOf)
+                Passwords.copyField(Passwords.fieldsOf, item.name);
+            else
+                Passwords.pick(item, alt);
             break;
         default:
             Apps.launch(item);
@@ -91,8 +94,56 @@ Item {
         Shell.launcherMode = modes[(i + delta + modes.length) % modes.length].id;
     }
 
+    // Passwords: → / Ctrl+Enter opens an entry's fields, ← / Esc goes back
+    function openFields(item: var): bool {
+        if (mode !== "passwords" || Passwords.fieldsOf || !item || item.unlock)
+            return false;
+        Passwords.openFields(item);
+        input.text = "";
+        return true;
+    }
+
+    function closeFields(): bool {
+        if (!Passwords.fieldsOf)
+            return false;
+        Passwords.closeFields();
+        input.text = "";
+        return true;
+    }
+
+    // Returns whether the key was handled; unhandled keys edit the text, and an
+    // unhandled Esc bubbles up to the island, which closes the launcher.
+    function handleKey(e: var): bool {
+        const ctrl = e.modifiers & Qt.ControlModifier;
+        const enter = e.key === Qt.Key_Return || e.key === Qt.Key_Enter;
+        const item = results[selected] ?? null;
+
+        if (ctrl && e.key === Qt.Key_Tab)
+            cycleMode(1);
+        else if (ctrl && e.key === Qt.Key_Backtab)
+            cycleMode(-1);
+        else if (e.key === Qt.Key_Down || e.key === Qt.Key_Tab)
+            move(1);
+        else if (e.key === Qt.Key_Up || e.key === Qt.Key_Backtab)
+            move(-1);
+        else if (enter && ctrl)
+            openFields(item);
+        else if (enter)
+            pick(item, e.modifiers & Qt.ShiftModifier);
+        else if (e.key === Qt.Key_Right && input.cursorPosition === input.text.length)
+            return openFields(item);
+        else if (e.key === Qt.Key_Left && input.text === "")
+            return closeFields();
+        else if (e.key === Qt.Key_Escape)
+            return closeFields();
+        else
+            return false;
+        return true;
+    }
+
     // Window focus order and the vault are fetched fresh each time their tab opens
     function refreshMode(): void {
+        Passwords.closeFields();
         if (mode === "windows")
             Windows.refresh();
         else if (mode === "passwords")
@@ -105,6 +156,7 @@ Item {
         refreshMode();
     }
     Component.onCompleted: refreshMode()
+    Component.onDestruction: Passwords.closeFields()
 
     implicitWidth: 580
     implicitHeight: col.implicitHeight + 2 * 14
@@ -208,26 +260,13 @@ Item {
                     clip: true
 
                     Keys.onPressed: e => {
-                        const ctrl = e.modifiers & Qt.ControlModifier;
-                        if (ctrl && e.key === Qt.Key_Tab)
-                            root.cycleMode(1);
-                        else if (ctrl && e.key === Qt.Key_Backtab)
-                            root.cycleMode(-1);
-                        else if (e.key === Qt.Key_Down || e.key === Qt.Key_Tab)
-                            root.move(1);
-                        else if (e.key === Qt.Key_Up || e.key === Qt.Key_Backtab)
-                            root.move(-1);
-                        else if (e.key === Qt.Key_Return || e.key === Qt.Key_Enter)
-                            root.pick(root.results[root.selected] ?? null, e.modifiers & Qt.ShiftModifier);
-                        else
-                            return;
-                        e.accepted = true;
+                        e.accepted = root.handleKey(e);
                     }
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: input.text === ""
-                        text: root.modeInfo.placeholder
+                        text: Passwords.fieldsOf && root.mode === "passwords" ? "‹ " + Passwords.fieldsOf.name + "  —  pick a field to copy" : root.modeInfo.placeholder
                         color: Theme.muted
                         font.pixelSize: Theme.fontSizeLarge
                     }
@@ -256,6 +295,8 @@ Item {
                         return modelData.image !== "" ? "Image" : modelData.value.trim().split("\n")[0];
                     case "windows":
                         return modelData.title || modelData.wayland?.appId || "";
+                    case "passwords":
+                        return Passwords.fieldsOf ? Passwords.describe(modelData).title : modelData.name;
                     default:
                         return modelData.name;
                     }
@@ -272,6 +313,8 @@ Item {
                     case "windows":
                         return (modelData.wayland?.appId ?? "") + "  ·  workspace " + (modelData.workspace?.id ?? "?");
                     case "passwords":
+                        if (Passwords.fieldsOf)
+                            return Passwords.describe(modelData).hint;
                         return [modelData.user, modelData.folder].filter(s => s).join("  ·  ");
                     default:
                         return modelData.genericName || modelData.comment || "";
