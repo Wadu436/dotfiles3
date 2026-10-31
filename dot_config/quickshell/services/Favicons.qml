@@ -90,8 +90,12 @@ Singleton {
         // it still beats the key fallback for a website entry.
         command: ["sh", "-c", `
             cd "$1" || exit 1
-            if curl -fsS --max-time 8 -o "$2.tmp" "https://icons.bitwarden.net/$2/icon.png" && [ -s "$2.tmp" ]; then
-                mv "$2.tmp" "$2.png"
+            # Sites hand back .ico/WebP/etc. too; normalise to a PNG Qt can read.
+            # ImageMagick can't sniff .ico from content, so retry naming it.
+            png() { magick "$1$2.tmp[0]" -resize '64x64>' "png:$2.png" 2>/dev/null; }
+            if curl -fsS --max-time 8 -o "$2.tmp" "https://icons.bitwarden.net/$2/icon.png" && [ -s "$2.tmp" ] \
+                && { png "" "$2" || png ico: "$2"; }; then
+                rm -f "$2.tmp"
             else
                 rm -f "$2.tmp"; touch "$2.none"; exit 1
             fi`, "sh", root.dir, domain]
