@@ -50,6 +50,9 @@ hl.config({
 		force_default_wallpaper = 0,
 		disable_hyprland_logo = true,
 		disable_splash_rendering = true,
+		-- Let apps raise their window when asked, e.g. kitty focusing the
+		-- window a clicked notification came from.
+		focus_on_activate = true,
 	},
 })
 
