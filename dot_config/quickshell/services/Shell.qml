@@ -18,6 +18,10 @@ Singleton {
 
     property bool osdVisible: false
 
+    // Keep the session from idling (no dim/lock/suspend by hypridle); the
+    // islands hold the actual idle inhibitor.
+    property bool stayAwake: false
+
     // A tray menu is a separate popup surface, which Hyprland's focus grab
     // counts as "outside"; panels must not auto-close while one is open.
     property bool menuOpen: false
@@ -83,6 +87,10 @@ Singleton {
             }
             root.launcherMode = mode;
             root.open("launcher", "");
+        }
+
+        function toggleStayAwake(): void {
+            root.stayAwake = !root.stayAwake;
         }
 
         function closePanel(): void {

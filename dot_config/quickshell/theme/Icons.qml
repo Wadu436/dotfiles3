@@ -15,6 +15,8 @@ Singleton {
     readonly property string volumeOff: g(0xF0581)
     readonly property string mic: g(0xF036C)
     readonly property string micOff: g(0xF036D)
+    readonly property string camera: g(0xF0100)
+    readonly property string screen: g(0xF0379)
     readonly property string speaker: g(0xF04C3)
     readonly property string headphones: g(0xF02CB)
 
@@ -38,6 +40,8 @@ Singleton {
     readonly property string ethernet: g(0xF0200)
     readonly property string offline: g(0xF0319)
 
+    readonly property string coffee: g(0xF0176)
+    readonly property string night: g(0xF0594)
     readonly property string lock: g(0xF033E)
     readonly property string logout: g(0xF0343)
     readonly property string reboot: g(0xF0709)

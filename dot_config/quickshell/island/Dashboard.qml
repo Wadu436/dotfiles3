@@ -95,7 +95,7 @@ Item {
         anchors.margins: 20
         spacing: 12
 
-        // Header: big clock + date, network, DND toggle
+        // Header: big clock + date, network
         RowLayout {
             Layout.fillWidth: true
             spacing: 12
@@ -132,35 +132,28 @@ Item {
                         Layout.maximumWidth: 160
                     }
                 }
-                Rectangle {
-                    Layout.alignment: Qt.AlignRight
-                    implicitWidth: dndRow.implicitWidth + 24
-                    implicitHeight: 30
-                    radius: 15
-                    color: Notifs.dnd ? Theme.iris : dndMouse.containsMouse ? Theme.highlightMed : Theme.tile
-                    RowLayout {
-                        id: dndRow
-                        anchors.centerIn: parent
-                        spacing: 6
-                        Glyph {
-                            text: Notifs.dnd ? Icons.bellOff : Icons.bell
-                            color: Notifs.dnd ? Theme.base : Theme.text
-                            size: 14
-                        }
-                        Label {
-                            text: "Do not disturb"
-                            color: Notifs.dnd ? Theme.base : Theme.text
-                            font.pixelSize: Theme.fontSizeSmall
-                        }
-                    }
-                    MouseArea {
-                        id: dndMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Notifs.dnd = !Notifs.dnd
-                    }
-                }
+            }
+        }
+
+        // Quick toggles
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            TogglePill {
+                icon: Notifs.dnd ? Icons.bellOff : Icons.bell
+                label: "Do not disturb"
+                checked: Notifs.dnd
+                onToggled: Notifs.dnd = !Notifs.dnd
+            }
+            TogglePill {
+                icon: Icons.coffee
+                label: "Stay awake"
+                checked: Shell.stayAwake
+                onToggled: Shell.stayAwake = !Shell.stayAwake
+            }
+            Item {
+                Layout.fillWidth: true
             }
         }
 

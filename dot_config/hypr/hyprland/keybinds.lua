@@ -49,9 +49,9 @@ hl.bind("SUPER + SHIFT + G", hl.dsp.window.move({ out_of_group = true }))      -
 hl.bind("SUPER + bracketleft", hl.dsp.group.prev())                            -- Previous tab in group
 hl.bind("SUPER + bracketright", hl.dsp.group.next())                           -- Next tab in group
 hl.bind("SUPER + CTRL + Left", hl.dsp.window.move({ into_group = "l" }))       -- Move the active window into the group on its left
-hl.bind("SUPER + CTRL + Right", hl.dsp.window.move({ into_group = "r" }))      -- ...right
-hl.bind("SUPER + CTRL + Up", hl.dsp.window.move({ into_group = "u" }))         -- ...above
-hl.bind("SUPER + CTRL + Down", hl.dsp.window.move({ into_group = "d" }))       -- ...below
+hl.bind("SUPER + CTRL + Right", hl.dsp.window.move({ into_group = "r" }))      -- Move the active window into the group on its right
+hl.bind("SUPER + CTRL + Up", hl.dsp.window.move({ into_group = "u" }))         -- Move the active window into the group above it
+hl.bind("SUPER + CTRL + Down", hl.dsp.window.move({ into_group = "d" }))       -- Move the active window into the group below it
 
 hl.config({
 	binds = {
@@ -69,6 +69,7 @@ hl.bind("SUPER + B", hl.dsp.exec_cmd("qs ipc call shell launcher passwords"))   
 hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-monitor.sh"))                 -- Screenshot the focused monitor
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshot a region (freezes, then crops)
 hl.bind("SUPER + Pause", hl.dsp.exec_cmd("qs ipc call shell toggleDashboard"))                    -- Toggle dashboard (Quickshell island)
+hl.bind("SUPER + slash", hl.dsp.exec_cmd("qs ipc call shell launcher keys"))                     -- Keybind cheat sheet (Quickshell island)
 
 -- clipse records clipboard history; the Quickshell launcher's clipboard tab reads it
 hl.on("hyprland.start", function() hl.dispatch(uwsm_launch("clipse -listen")) end)

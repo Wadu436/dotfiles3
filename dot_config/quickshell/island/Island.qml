@@ -123,6 +123,12 @@ PanelWindow {
         }
     }
 
+    // Stay-awake toggle: an inhibitor on a visible surface stops hypridle
+    IdleInhibitor {
+        window: win
+        enabled: Shell.stayAwake
+    }
+
     // Clicking anywhere outside the island closes an open panel.
     HyprlandFocusGrab {
         windows: [win]

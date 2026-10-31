@@ -7,7 +7,8 @@ import qs.services
 import qs.widgets
 
 // Search-first picker with tabs: apps (SUPER+D), windows (SUPER+Tab), emoji
-// (SUPER+.), clipboard history (SUPER+V) and passwords (SUPER+B). Type to
+// (SUPER+.), clipboard history (SUPER+V), passwords (SUPER+B) and a keybind
+// cheat sheet (SUPER+/). Type to
 // filter, ↑/↓ or Tab to move, Enter to pick (Shift+Enter: alternate action),
 // Ctrl+Tab to switch tabs, Esc to close.
 Item {
@@ -35,6 +36,11 @@ Item {
             placeholder: "Search clipboard…"
         },
         {
+            id: "keys",
+            label: "Keys",
+            placeholder: "Search keybinds…"
+        },
+        {
             id: "passwords",
             label: "Passwords",
             placeholder: "Search vault…  (→ all fields, Shift+Enter username)"
@@ -52,6 +58,8 @@ Item {
             return Clips.search(input.text, 8);
         case "windows":
             return Windows.search(input.text, 8);
+        case "keys":
+            return Keybinds.search(input.text, 8);
         case "passwords":
             return Passwords.fieldsOf ? Passwords.searchFields(input.text, 8) : Passwords.search(input.text, 8);
         default:
@@ -74,6 +82,8 @@ Item {
         case "windows":
             Windows.pick(item);
             break;
+        case "keys":
+            break; // reference only
         case "passwords":
             if (Passwords.fieldsOf)
                 Passwords.copyField(Passwords.fieldsOf, item.name);
@@ -297,6 +307,8 @@ Item {
                         return modelData.image !== "" ? "Image" : modelData.value.trim().split("\n")[0];
                     case "windows":
                         return modelData.title || modelData.wayland?.appId || "";
+                    case "keys":
+                        return modelData.desc;
                     case "passwords":
                         return Passwords.fieldsOf ? Passwords.describe(modelData).title : modelData.name;
                     default:
@@ -314,6 +326,8 @@ Item {
                         }
                     case "windows":
                         return (modelData.wayland?.appId ?? "") + "  ·  workspace " + (modelData.workspace?.id ?? "?");
+                    case "keys":
+                        return (modelData.mods ? modelData.mods + " + " : "") + modelData.keys;
                     case "passwords":
                         if (Passwords.fieldsOf)
                             return Passwords.describe(modelData).hint;
@@ -374,6 +388,12 @@ Item {
                             sourceSize: Qt.size(48, 48)
                             fillMode: Image.PreserveAspectFit
                             asynchronous: true
+                        }
+                        Text {
+                            anchors.centerIn: parent
+                            visible: root.mode === "keys"
+                            text: "⌨️"
+                            font.pixelSize: 20
                         }
                         Text {
                             anchors.centerIn: parent

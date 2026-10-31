@@ -37,6 +37,40 @@ Item {
         anchors.centerIn: parent
         spacing: Theme.spacing + 4
 
+        // Privacy: lit while something records the mic, camera or screen
+        Item {
+            visible: Privacy.active
+            implicitWidth: privacyRow.implicitWidth
+            implicitHeight: Theme.idleHeight
+
+            Row {
+                id: privacyRow
+                anchors.centerIn: parent
+                spacing: 6
+                Glyph {
+                    visible: Privacy.mic.length > 0
+                    text: Icons.mic
+                    color: Theme.gold
+                    size: 14
+                }
+                Glyph {
+                    visible: Privacy.camera.length > 0
+                    text: Icons.camera
+                    color: Theme.foam
+                    size: 14
+                }
+                Glyph {
+                    visible: Privacy.screen
+                    text: Icons.screen
+                    color: Theme.love
+                    size: 14
+                }
+            }
+            HoverTip {
+                text: [Privacy.mic.length ? "<b>Microphone</b>: " + Privacy.mic.join(", ") : "", Privacy.camera.length ? "<b>Camera</b>: " + Privacy.camera.join(", ") : "", Privacy.screen ? "<b>Screen</b> is being shared" : ""].filter(l => l).join("<br>")
+            }
+        }
+
         Workspaces {
             monitor: root.monitor
         }
