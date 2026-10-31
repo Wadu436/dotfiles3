@@ -26,13 +26,11 @@ PanelWindow {
             return "osd";
         if (focused && Notifs.popups.length > 0)
             return "toast";
-        if (hover.hovered)
-            return "peek";
         return "idle";
     }
-    readonly property bool pill: state === "idle" || state === "peek" || state === "osd"
+    readonly property bool pill: state === "idle" || state === "osd"
     // Games and fullscreen video only get interrupted by toasts/OSD/panels.
-    readonly property bool hidden: fullscreen && (state === "idle" || state === "peek")
+    readonly property bool hidden: fullscreen && state === "idle"
 
     readonly property Item current: {
         switch (state) {
@@ -136,15 +134,10 @@ PanelWindow {
 
         Keys.onEscapePressed: Shell.close()
 
-        HoverHandler {
-            id: hover
-        }
-
         IdleView {
             id: idle
             screenName: win.name
             monitor: win.monitor
-            peek: win.state === "peek"
             shown: win.current === idle
         }
 

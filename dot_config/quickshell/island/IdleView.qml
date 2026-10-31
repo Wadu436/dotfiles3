@@ -6,13 +6,11 @@ import qs.services
 import qs.widgets
 
 // The resting pill: workspaces · clock · media · volume · bell.
-// While hovered (`peek`) it widens to show the song, date and temperatures.
 Item {
     id: root
 
     required property string screenName
     required property HyprlandMonitor monitor
-    property bool peek: false
     property bool shown: true
 
     anchors.horizontalCenter: parent.horizontalCenter
@@ -26,9 +24,6 @@ Item {
             duration: Theme.normal
         }
     }
-
-    onPeekChanged: SysStats.users += peek ? 1 : -1
-    Component.onDestruction: if (peek) SysStats.users--
 
     // Scrolling anywhere on the pill walks through this monitor's workspaces
     WheelHandler {
@@ -52,7 +47,7 @@ Item {
             font.italic: true
         }
 
-        // Clock (+ date on peek) → calendar
+        // Clock → calendar
         MouseArea {
             implicitWidth: clockRow.implicitWidth
             implicitHeight: Theme.idleHeight
@@ -63,11 +58,6 @@ Item {
                 id: clockRow
                 anchors.centerIn: parent
                 spacing: 8
-                Label {
-                    visible: root.peek
-                    text: Time.format("ddd d MMM")
-                    color: Theme.subtle
-                }
                 Label {
                     text: Time.format("HH:mm")
                     font.bold: true
@@ -92,34 +82,6 @@ Item {
                     text: Media.playing ? Icons.music : Icons.pause
                     color: Media.playing ? Theme.foam : Theme.muted
                 }
-                Label {
-                    visible: root.peek && Media.title !== ""
-                    text: Media.artist ? Media.title + "  ·  " + Media.artist : Media.title
-                    color: Theme.subtle
-                    Layout.maximumWidth: 280
-                }
-            }
-        }
-
-        // Temperatures (peek only)
-        RowLayout {
-            visible: root.peek
-            spacing: 8
-            Glyph {
-                text: Icons.cpu
-                color: Theme.muted
-            }
-            Label {
-                text: SysStats.cpuTemp + "°"
-                color: SysStats.tempColor(SysStats.cpuTemp)
-            }
-            Glyph {
-                text: Icons.gpu
-                color: Theme.muted
-            }
-            Label {
-                text: SysStats.gpuTemp + "°"
-                color: SysStats.tempColor(SysStats.gpuTemp)
             }
         }
 
@@ -139,11 +101,6 @@ Item {
                 Glyph {
                     text: Icons.volume(Audio.muted, Audio.volume)
                     color: Audio.muted ? Theme.muted : Theme.text
-                }
-                Label {
-                    visible: root.peek
-                    text: Math.round(Audio.volume * 100) + "%"
-                    color: Theme.subtle
                 }
             }
         }
