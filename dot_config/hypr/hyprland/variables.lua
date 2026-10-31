@@ -9,13 +9,9 @@ hl.config({
 		gaps_in = 3,
 		gaps_out = 4,
 
-		border_size = 2,
-
-		col = {
-			-- Rosé Pine: iris → foam gradient for focus, highlight_med for inactive
-			active_border = { colors = { "rgba(c4a7e7ee)", "rgba(9ccfd8ee)" }, angle = 45 },
-			inactive_border = "rgba(403d52aa)",
-		},
+		-- No border: the focused window is marked by a ring outside it instead
+		-- (see decoration.shadow)
+		border_size = 0,
 
 		resize_on_border = false,
 		allow_tearing = false,
@@ -28,11 +24,14 @@ hl.config({
 		active_opacity = 1.0,
 		inactive_opacity = 1.0,
 
+		-- A crisp 2px ring just outside the window in the Rosé Pine iris → foam
+		-- gradient marks the focused window; on other windows it's invisible.
 		shadow = {
 			enabled = true,
-			range = 4,
-			render_power = 3,
-			color = "rgba(191724ee)", -- Rosé Pine base
+			sharp = true,
+			range = 2,
+			color = { colors = { "rgba(c4a7e7ee)", "rgba(9ccfd8ee)" }, angle = 45 },
+			color_inactive = "rgba(00000000)",
 		},
 
 		-- Frosted glass: soft blur, slightly darkened for text contrast,
