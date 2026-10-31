@@ -30,9 +30,11 @@ local env = {
 	QT_QPA_PLATFORM = "wayland;xcb",
 	QT_WAYLAND_DISABLE_WINDOWDECORATION = "1",
 	QT_QPA_PLATFORMTHEME = "qt6ct",
-	-- Make Kirigami/QtQuick Controls apps (Haruna, etc.) load qqc2-desktop-style
-	-- so they honor KColorScheme from ~/.config/kdeglobals
-	QT_QUICK_CONTROLS_STYLE = "org.kde.desktop",
+	-- Fusion makes QtQuick Controls use the application palette (qt6ct / Rose Pine),
+	-- keeping QML and widget colors consistent. Was "org.kde.desktop", which sourced
+	-- colors from qqc2-desktop-style/kdeglobals instead and clashed with qt6ct outside
+	-- Plasma (owncloud rendered dark cards under light chrome).
+	QT_QUICK_CONTROLS_STYLE = "Fusion",
 }
 
 for k, v in pairs(env) do

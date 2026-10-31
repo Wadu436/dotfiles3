@@ -56,7 +56,8 @@ hl.bind("SUPER + D", uwsm_launch('rofi -show drun -show-icons -run-command "uwsm
 hl.bind("SUPER + Tab", uwsm_launch("rofi -show window -show-icons"))                              -- Application switcher
 hl.bind("SUPER + Period", uwsm_launch("rofi -modi emoji -show emoji"))                            -- Emoji picker
 hl.bind("SUPER + B", uwsm_launch("rofi-rbw"))                                                     -- Bitwarden picker
-hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshots
+hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-monitor.sh"))                 -- Screenshot the focused monitor
+hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshot a region (freezes, then crops)
 hl.bind("SUPER + Pause", hl.dsp.exec_cmd("swaync-client -t -sw"))                                 -- Toggle notification panel
 
 hl.on("hyprland.start", function() hl.dispatch(uwsm_launch("clipse -listen")) end)
