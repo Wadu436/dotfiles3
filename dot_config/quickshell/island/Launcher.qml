@@ -363,9 +363,21 @@ Item {
                             }
                             asynchronous: true
                         }
+                        // Website favicon for vault entries, 🔑 for the rest
+                        Image {
+                            id: favicon
+                            anchors.centerIn: parent
+                            width: 24
+                            height: 24
+                            visible: root.mode === "passwords" && status === Image.Ready
+                            source: root.mode === "passwords" && !Passwords.fieldsOf && !row.modelData.unlock ? Favicons.icon(row.modelData.domain ?? "") : ""
+                            sourceSize: Qt.size(48, 48)
+                            fillMode: Image.PreserveAspectFit
+                            asynchronous: true
+                        }
                         Text {
                             anchors.centerIn: parent
-                            visible: root.mode === "passwords"
+                            visible: root.mode === "passwords" && !favicon.visible
                             text: "🔑"
                             font.pixelSize: 20
                         }

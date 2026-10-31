@@ -140,16 +140,24 @@ Singleton {
 
     Process {
         id: list
-        command: ["rbw", "list", "--fields", "id,name,user,folder"]
+        // --raw: same non-secret fields as --fields, plus the entry's URLs
+        command: ["rbw", "list", "--raw"]
         stdout: StdioCollector {
             onStreamFinished: {
-                root.entries = text.split("\n").filter(l => l !== "").map(l => {
-                    const [id, name, user, folder] = l.split("\t");
+                let raw = [];
+                try {
+                    raw = JSON.parse(text);
+                } catch (err) {
+                    console.warn("rbw list unreadable:", err);
+                }
+                root.entries = raw.map(e => {
+                    const uris = (e.uris ?? []).map(u => typeof u === "string" ? u : u?.uri ?? "");
                     return {
-                        id,
-                        name: name ?? "",
-                        user: user ?? "",
-                        folder: folder ?? ""
+                        id: e.id,
+                        name: e.name ?? "",
+                        user: e.user ?? "",
+                        folder: e.folder ?? "",
+                        domain: uris.map(u => Favicons.domainOf(u)).find(d => d) ?? ""
                     };
                 }).sort((a, b) => a.name.localeCompare(b.name));
                 root.loading = false;
