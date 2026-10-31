@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# pinentry for rbw that keeps the Bitwarden master password in the login
+# keyring (gnome-keyring, unlocked by SDDM at login), so rbw unlocks without
+# prompting. Other prompts (2FA codes) go to the real pinentry and are never
+# stored; if rbw says the stored password was wrong, it's forgotten and the
+# real pinentry asks again.
+#
+# Speaks the subset of the Assuan pinentry protocol rbw uses. The password only
+# ever travels through pipes, never argv.
+#
+# Enable with: rbw config set pinentry ~/.local/bin/rbw-pinentry-keyring
+set -u
+
+attrs=(application rbw purpose master-password)
+
+# Assuan escapes %, CR and LF in data lines
+decode() {
+    local s=${1//%0A/$'\n'}
+    s=${s//%0D/$'\r'}
+    printf '%s' "${s//%25/%}"
+}
+encode() {
+    local s=${1//%/%25}
+    s=${s//$'\r'/%0D}
+    printf '%s' "${s//$'\n'/%0A}"
+}
+
+# Replay the SET*/OPTION lines rbw sent to the real pinentry; print the PIN
+ask_real() {
+    local out line
+    out=$({
+        printf '%s\n' "${settings[@]}"
+        echo GETPIN
+        echo BYE
+    } | pinentry 2>/dev/null) || return 1
+    while IFS= read -r line; do
+        case $line in
+        "D "*)
+            decode "${line#D }"
+            return 0
+            ;;
+        ERR*) return 1 ;;
+        esac
+    done <<<"$out"
+    return 1
+}
+
+settings=()
+prompt=""
+retry=""
+
+echo "OK Pleased to meet you"
+while IFS= read -r line; do
+    case $line in
+    "SETPROMPT "*)
+        prompt=${line#SETPROMPT }
+        settings+=("$line")
+        echo OK
+        ;;
+    "SETERROR "*)
+        retry=1
+        settings+=("$line")
+        echo OK
+        ;;
+    SET* | OPTION*)
+        settings+=("$line")
+        echo OK
+        ;;
+    GETPIN)
+        master=""
+        [[ $prompt == *"Master Password"* ]] && master=1
+        pin=""
+        if [[ -n $master && -z $retry ]]; then
+            pin=$(secret-tool lookup "${attrs[@]}" 2>/dev/null)
+        fi
+        if [[ -z $pin ]]; then
+            [[ -n $master && -n $retry ]] && secret-tool clear "${attrs[@]}" 2>/dev/null
+            if ! pin=$(ask_real); then
+                echo "ERR 83886179 Operation cancelled"
+                continue
+            fi
+            [[ -n $master ]] && printf '%s' "$pin" | secret-tool store --label="rbw master password" "${attrs[@]}"
+        fi
+        echo "D $(encode "$pin")"
+        echo OK
+        ;;
+    BYE)
+        echo OK
+        exit 0
+        ;;
+    *) echo OK ;;
+    esac
+done

@@ -62,7 +62,8 @@ Item {
     function pick(item: var, alt: bool): void {
         if (!item)
             return;
-        Shell.close();
+        // Act first, close after: closing destroys this launcher, whose cleanup
+        // resets state (like the open password entry) the action still needs.
         switch (mode) {
         case "emoji":
             Emoji.pick(item);
@@ -82,6 +83,7 @@ Item {
         default:
             Apps.launch(item);
         }
+        Shell.close();
     }
 
     function move(delta: int): void {
