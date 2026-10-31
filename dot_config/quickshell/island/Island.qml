@@ -36,10 +36,13 @@ PanelWindow {
     // Left/right pills sharing the strip the island reserves anyway
     component EdgePill: Rectangle {
         default property alias content: inner.data
-        y: Theme.gap
+        // Hangs from the top edge like the island (see there)
+        y: -1
         width: inner.implicitWidth + 2 * Theme.padding
-        height: Theme.idleHeight
+        height: Theme.idleHeight + 1
         radius: height / 2
+        topLeftRadius: 0
+        topRightRadius: 0
         color: Theme.islandBg
         border.width: 1
         border.color: Theme.islandBorder
@@ -97,7 +100,7 @@ PanelWindow {
     // below. While the grab is active the keyboard comes to us anyway.
     WlrLayershell.keyboardFocus: !panelHere ? WlrKeyboardFocus.None : WlrKeyboardFocus.OnDemand
     exclusionMode: ExclusionMode.Normal
-    exclusiveZone: Theme.gap + Theme.idleHeight
+    exclusiveZone: Theme.idleHeight
 
     // Input only lands on the island and the two edge pills.
     mask: Region {
@@ -154,11 +157,15 @@ PanelWindow {
     Rectangle {
         id: island
 
+        // Flush with the top edge, notch-style: square top corners, and one
+        // pixel above the screen so the top border line is cut off cleanly.
         anchors.horizontalCenter: parent.horizontalCenter
-        y: Theme.gap
+        y: -1
         width: win.current.implicitWidth
-        height: win.current.implicitHeight
+        height: win.current.implicitHeight + 1
         radius: win.pill ? height / 2 : Theme.panelRadius
+        topLeftRadius: 0
+        topRightRadius: 0
         color: Theme.islandBg
         border.width: 1
         border.color: Shell.submap !== "" ? Theme.gold : Theme.islandBorder

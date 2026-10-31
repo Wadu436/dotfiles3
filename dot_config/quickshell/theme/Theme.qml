@@ -31,9 +31,8 @@ Singleton {
     readonly property int fontSizeLarge: 16
     readonly property int iconSize: 16
 
-    // Island geometry. The island floats `gap` below the top edge, and windows
-    // keep `gap` below the island, matching Hyprland's gaps_out.
-    readonly property int gap: 6
+    // Island geometry. The island and edge pills hang flush from the top edge;
+    // Hyprland's gaps_out keeps windows clear of them.
     // Horizontal inset of the edge pills; matches Hyprland's gaps_out so they
     // line up with window edges.
     readonly property int screenMargin: 4
