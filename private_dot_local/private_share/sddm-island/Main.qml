@@ -18,6 +18,7 @@ Rectangle {
     readonly property color foam: "#9ccfd8"
     readonly property color iris: "#c4a7e7"
     readonly property color highlightMed: "#403d52"
+    readonly property color highlightHigh: "#524f67"
     readonly property string font: config.font || "JetBrainsMono Nerd Font"
 
     property int userIndex: Math.max(0, users.findIndex(u => u.name === userModel.lastUser))
@@ -155,8 +156,8 @@ Rectangle {
             }
         }
 
-        // Field with a gradient ring: a gradient rectangle behind a slightly
-        // smaller fill
+        // Password field: dark fill with a thin solid outline that turns
+        // love on a wrong password and gold with caps lock on
         Item {
             id: field
             width: 340
@@ -174,23 +175,9 @@ Rectangle {
             Rectangle {
                 anchors.fill: parent
                 radius: 12
-                gradient: Gradient {
-                    orientation: Gradient.Horizontal
-                    GradientStop {
-                        position: 0
-                        color: root.failed ? root.love : keyboard.capsLock ? root.gold : root.iris
-                    }
-                    GradientStop {
-                        position: 1
-                        color: root.failed ? root.gold : root.foam
-                    }
-                }
-            }
-            Rectangle {
-                anchors.fill: parent
-                anchors.margins: 2
-                radius: 10
                 color: Qt.alpha(root.base, 0.85)
+                border.width: 2
+                border.color: root.failed ? root.love : keyboard.capsLock ? root.gold : root.highlightHigh
             }
 
             TextInput {
