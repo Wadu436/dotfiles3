@@ -18,6 +18,12 @@ RowLayout {
         return Math.round(v * 100) + "%";
     }
 
+    // Live numbers are padded to a fixed width (the font is monospaced) so the
+    // pill, and the tray next to it, doesn't twitch as values change.
+    function fixed(s: string, width: int): string {
+        return s.padStart(width, "\u2007");
+    }
+
     // HoverTip anchors to its parent, so it needs a plain Item, not a layout
     Item {
         implicitWidth: cpuRow.implicitWidth
@@ -32,8 +38,12 @@ RowLayout {
                 size: 14
             }
             Label {
-                text: SysStats.cpuTemp + "°"
+                text: root.fixed(SysStats.cpuTemp + "°", 3)
                 color: SysStats.tempColor(SysStats.cpuTemp)
+            }
+            Label {
+                text: root.fixed(root.pct(SysStats.cpu), 4)
+                color: Theme.muted
             }
         }
         HoverTip {
@@ -54,8 +64,12 @@ RowLayout {
                 size: 14
             }
             Label {
-                text: SysStats.gpuTemp + "°"
+                text: root.fixed(SysStats.gpuTemp + "°", 3)
                 color: SysStats.tempColor(SysStats.gpuTemp)
+            }
+            Label {
+                text: root.fixed(root.pct(SysStats.gpu), 4)
+                color: Theme.muted
             }
         }
         HoverTip {
@@ -76,12 +90,16 @@ RowLayout {
                 size: 14
             }
             Label {
-                text: root.pct(SysStats.mem)
+                text: root.fixed(SysStats.memUsedGb.toFixed(1) + "G", 5)
                 color: SysStats.mem >= 0.9 ? Theme.love : SysStats.mem >= 0.75 ? Theme.gold : Theme.subtle
+            }
+            Label {
+                text: root.fixed(root.pct(SysStats.mem), 4)
+                color: Theme.muted
             }
         }
         HoverTip {
-            text: "<b>RAM</b> in use<br>" + SysStats.memUsedGb.toFixed(1) + " of " + Math.round(SysStats.memTotalGb) + " GB"
+            text: "<b>RAM</b> in use<br>" + SysStats.memUsedGb.toFixed(1) + " of " + Math.round(SysStats.memTotalGb) + " GB (" + root.pct(SysStats.mem) + ")"
         }
     }
 
