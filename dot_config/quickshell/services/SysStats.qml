@@ -20,6 +20,16 @@ Singleton {
 
     property var lastCpu: null
 
+    // The last minute of samples (oldest first), for sparklines
+    readonly property int historyLength: 30
+    property list<real> cpuHistory: []
+    property list<real> gpuHistory: []
+    property list<real> memHistory: []
+
+    function pushed(history: list<real>, v: real): list<real> {
+        return [...history, v].slice(-historyLength);
+    }
+
     // Only sample while something is showing the numbers.
     property int users: 0
     readonly property bool active: users > 0
@@ -91,6 +101,9 @@ Singleton {
             memTotalGb = memTotal / 1048576;
             memUsedGb = (memTotal - memAvail) / 1048576;
         }
+        cpuHistory = pushed(cpuHistory, cpu);
+        gpuHistory = pushed(gpuHistory, gpu);
+        memHistory = pushed(memHistory, mem);
     }
 
     function tempColor(t: int): color {

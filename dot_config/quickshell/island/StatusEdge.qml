@@ -4,8 +4,8 @@ import qs.theme
 import qs.services
 import qs.widgets
 
-// Right-edge pill: temperatures, network, tray and the date. Hover any of
-// them for a plain-language explanation.
+// Right-edge pill: CPU/GPU/RAM sparklines, network, tray and the date. Hover
+// any of them for the exact numbers / a plain-language explanation.
 RowLayout {
     id: root
 
@@ -18,89 +18,63 @@ RowLayout {
         return Math.round(v * 100) + "%";
     }
 
-    // Live numbers are padded to a fixed width (the font is monospaced) so the
-    // pill, and the tray next to it, doesn't twitch as values change.
-    function fixed(s: string, width: int): string {
-        return s.padStart(width, "\u2007");
-    }
+    // Label + sparkline of the last minute. The line turns gold/red when the
+    // part runs hot; exact numbers are in the hover tip.
+    component Stat: Item {
+        id: stat
 
-    // HoverTip anchors to its parent, so it needs a plain Item, not a layout
-    Item {
-        implicitWidth: cpuRow.implicitWidth
-        implicitHeight: cpuRow.implicitHeight
+        required property string label
+        required property list<real> values
+        required property color lineColor
+        required property string tip
 
-        RowLayout {
-            id: cpuRow
+        implicitWidth: statRow.implicitWidth
+        implicitHeight: statRow.implicitHeight
+
+        Row {
+            id: statRow
             spacing: 6
-            Glyph {
-                text: Icons.cpu
-                color: Theme.muted
-                size: 14
-            }
             Label {
-                text: root.fixed(SysStats.cpuTemp + "°", 3)
-                color: SysStats.tempColor(SysStats.cpuTemp)
-            }
-            Label {
-                text: root.fixed(root.pct(SysStats.cpu), 4)
+                anchors.verticalCenter: parent.verticalCenter
+                text: stat.label
                 color: Theme.muted
+                font.pixelSize: Theme.fontSizeSmall
+            }
+            Sparkline {
+                anchors.verticalCenter: parent.verticalCenter
+                values: stat.values
+                capacity: SysStats.historyLength
+                color: stat.lineColor
             }
         }
         HoverTip {
-            text: "<b>CPU</b> temperature " + SysStats.cpuTemp + "°C<br>load " + root.pct(SysStats.cpu)
+            text: stat.tip
         }
     }
 
-    Item {
-        implicitWidth: gpuRow.implicitWidth
-        implicitHeight: gpuRow.implicitHeight
-
-        RowLayout {
-            id: gpuRow
-            spacing: 6
-            Glyph {
-                text: Icons.gpu
-                color: Theme.muted
-                size: 14
-            }
-            Label {
-                text: root.fixed(SysStats.gpuTemp + "°", 3)
-                color: SysStats.tempColor(SysStats.gpuTemp)
-            }
-            Label {
-                text: root.fixed(root.pct(SysStats.gpu), 4)
-                color: Theme.muted
-            }
-        }
-        HoverTip {
-            text: "<b>GPU</b> temperature " + SysStats.gpuTemp + "°C<br>load " + root.pct(SysStats.gpu)
-        }
+    function heat(t: int, normal: color): color {
+        return t >= 85 ? Theme.love : t >= 75 ? Theme.gold : normal;
     }
 
-    Item {
-        implicitWidth: memRow.implicitWidth
-        implicitHeight: memRow.implicitHeight
+    Stat {
+        label: "cpu"
+        values: SysStats.cpuHistory
+        lineColor: root.heat(SysStats.cpuTemp, Theme.iris)
+        tip: "<b>CPU</b> load " + root.pct(SysStats.cpu) + "<br>temperature " + SysStats.cpuTemp + "°C"
+    }
 
-        RowLayout {
-            id: memRow
-            spacing: 6
-            Glyph {
-                text: Icons.memory
-                color: Theme.muted
-                size: 14
-            }
-            Label {
-                text: root.fixed(SysStats.memUsedGb.toFixed(1) + "G", 5)
-                color: SysStats.mem >= 0.9 ? Theme.love : SysStats.mem >= 0.75 ? Theme.gold : Theme.subtle
-            }
-            Label {
-                text: root.fixed(root.pct(SysStats.mem), 4)
-                color: Theme.muted
-            }
-        }
-        HoverTip {
-            text: "<b>RAM</b> in use<br>" + SysStats.memUsedGb.toFixed(1) + " of " + Math.round(SysStats.memTotalGb) + " GB (" + root.pct(SysStats.mem) + ")"
-        }
+    Stat {
+        label: "gpu"
+        values: SysStats.gpuHistory
+        lineColor: root.heat(SysStats.gpuTemp, Theme.foam)
+        tip: "<b>GPU</b> load " + root.pct(SysStats.gpu) + "<br>temperature " + SysStats.gpuTemp + "°C"
+    }
+
+    Stat {
+        label: "ram"
+        values: SysStats.memHistory
+        lineColor: SysStats.mem >= 0.9 ? Theme.love : SysStats.mem >= 0.75 ? Theme.gold : Theme.rose
+        tip: "<b>RAM</b> in use<br>" + SysStats.memUsedGb.toFixed(1) + " of " + Math.round(SysStats.memTotalGb) + " GB (" + root.pct(SysStats.mem) + ")"
     }
 
     Glyph {
