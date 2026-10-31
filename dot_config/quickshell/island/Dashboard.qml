@@ -86,8 +86,7 @@ Item {
                     disarm.restart();
                     return;
                 }
-                Shell.close();
-                Quickshell.execDetached(pb.command);
+                Shell.closeThenRun(pb.command);
             }
         }
     }

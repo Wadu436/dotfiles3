@@ -55,6 +55,26 @@ Singleton {
         panel = "";
     }
 
+    // Close the open panel, then run `command` once the island has finished
+    // animating away, so e.g. hyprlock's screenshot background doesn't catch
+    // the dashboard half-closed.
+    function closeThenRun(command: var): void {
+        close();
+        pendingCommand = command;
+        afterClose.restart();
+    }
+
+    property var pendingCommand: null
+
+    Timer {
+        id: afterClose
+        interval: 450
+        onTriggered: {
+            Quickshell.execDetached(root.pendingCommand);
+            root.pendingCommand = null;
+        }
+    }
+
     function showOsd(): void {
         osdVisible = true;
         osdTimer.restart();
