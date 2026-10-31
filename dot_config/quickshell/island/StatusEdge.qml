@@ -86,7 +86,7 @@ RowLayout {
     }
 
     // Download (foam) and upload (rose), scaled to the busiest moment of the
-    // last minute but never below 64 KB/s, so idle chatter stays flat.
+    // last minute plus headroom, never below 64 KB/s so idle chatter stays flat.
     Stat {
         label: "net"
         labelColor: Network.online ? Theme.muted : Theme.love
@@ -94,7 +94,7 @@ RowLayout {
         lineColor: Theme.foam
         values2: SysStats.txHistory
         lineColor2: Theme.rose
-        max: Math.max(65536, ...SysStats.rxHistory, ...SysStats.txHistory)
+        max: 1.25 * Math.max(65536, ...SysStats.rxHistory, ...SysStats.txHistory)
         tip: (Network.online ? "<b>" + (Network.type === "wifi" ? "Wi-Fi" : "Ethernet") + "</b> · " + Network.name : "<b>Offline</b>") + "<br><font color=\"" + Theme.foam + "\">↓</font> " + SysStats.rate(SysStats.rxRate) + "   <font color=\"" + Theme.rose + "\">↑</font> " + SysStats.rate(SysStats.txRate)
     }
 

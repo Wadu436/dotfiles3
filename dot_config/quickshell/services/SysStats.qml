@@ -17,6 +17,8 @@ Singleton {
     property real gpu: 0 // 0..1
     property real rxRate: 0 // bytes/s, all physical interfaces
     property real txRate: 0 // bytes/s
+    // Weight of the newest network sample in the moving average (0..1]
+    readonly property real netSmoothing: 0.2
     property int cpuTemp: 0 // °C
     property int gpuTemp: 0 // °C
 
@@ -101,9 +103,12 @@ Singleton {
                 {
                     const now = Date.now(), rx = Number(f[1]), tx = Number(f[2]);
                     if (lastNet) {
+                        // Traffic is bursty; an exponential moving average keeps
+                        // the graph readable instead of a wall of spikes.
                         const dt = Math.max(0.001, (now - lastNet.t) / 1000);
-                        rxRate = Math.max(0, (rx - lastNet.rx) / dt);
-                        txRate = Math.max(0, (tx - lastNet.tx) / dt);
+                        const smooth = (prev, v) => prev + netSmoothing * (Math.max(0, v) - prev);
+                        rxRate = smooth(rxRate, (rx - lastNet.rx) / dt);
+                        txRate = smooth(txRate, (tx - lastNet.tx) / dt);
                     }
                     lastNet = {
                         rx,

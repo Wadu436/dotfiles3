@@ -29,10 +29,16 @@ Canvas {
         const x0 = width - (values.length - 1) * step;
         const y = v => 1 + (height - 2) * (1 - Math.max(0, Math.min(1, v / root.max)));
 
+        // Smooth curve: bend through the midpoints between samples, using each
+        // sample as the control point, so there are no sharp corners.
         ctx.beginPath();
         ctx.moveTo(x0, y(values[0]));
-        for (let i = 1; i < values.length; i++)
-            ctx.lineTo(x0 + i * step, y(values[i]));
+        for (let i = 1; i < values.length - 1; i++) {
+            const mx = x0 + (i + 0.5) * step;
+            const my = (y(values[i]) + y(values[i + 1])) / 2;
+            ctx.quadraticCurveTo(x0 + i * step, y(values[i]), mx, my);
+        }
+        ctx.lineTo(width, y(values[values.length - 1]));
         ctx.lineWidth = 1.5;
         ctx.lineJoin = "round";
         ctx.strokeStyle = color;
