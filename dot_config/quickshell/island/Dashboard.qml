@@ -16,6 +16,24 @@ Item {
         SysStats.users++;
         NightLight.refresh();
     }
+
+    // Power hotkeys. Take focus a beat after opening: grabbing it in the same
+    // frame makes Hyprland drop the island's focus grab and close the panel.
+    // Unhandled keys (Esc) bubble up to the island, which closes it.
+    Timer {
+        interval: 120
+        running: true
+        onTriggered: root.forceActiveFocus()
+    }
+    Keys.onPressed: e => {
+        if (e.modifiers & ~Qt.ShiftModifier)
+            return;
+        const button = powerRow.children.find(b => b.key === e.text.toLowerCase());
+        if (button) {
+            button.activate();
+            e.accepted = true;
+        }
+    }
     Component.onDestruction: SysStats.users--
 
     component Card: Rectangle {
@@ -39,8 +57,19 @@ Item {
         required property string icon
         required property string label
         required property var command
+        required property string key // single letter, pressed while the dashboard is open
         property bool confirm: false
         property bool armed: false
+
+        // Click or key: run it, or for confirm buttons arm on the first press
+        function activate(): void {
+            if (confirm && !armed) {
+                armed = true;
+                disarm.restart();
+                return;
+            }
+            Shell.closeThenRun(command);
+        }
 
         Layout.fillWidth: true
         implicitHeight: 54
@@ -80,14 +109,18 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                if (pb.confirm && !pb.armed) {
-                    pb.armed = true;
-                    disarm.restart();
-                    return;
-                }
-                Shell.closeThenRun(pb.command);
-            }
+            onClicked: pb.activate()
+        }
+
+        // Keycap hint in the corner
+        Label {
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.margins: 6
+            text: pb.key.toUpperCase()
+            color: pb.armed ? Theme.base : Theme.muted
+            font.pixelSize: 10
+            font.bold: true
         }
     }
 
@@ -273,30 +306,35 @@ Item {
             }
         }
 
-        // Power
+        // Power (L / E / R / S while the dashboard is open)
         RowLayout {
+            id: powerRow
             Layout.fillWidth: true
             Layout.topMargin: 4
             spacing: 8
             PowerButton {
                 icon: Icons.lock
                 label: "Lock"
+                key: "l"
                 command: ["loginctl", "lock-session"]
             }
             PowerButton {
                 icon: Icons.logout
                 label: "Log out"
+                key: "e"
                 command: ["uwsm", "stop"]
             }
             PowerButton {
                 icon: Icons.reboot
                 label: "Reboot"
+                key: "r"
                 command: ["systemctl", "reboot"]
                 confirm: true
             }
             PowerButton {
                 icon: Icons.power
                 label: "Shut down"
+                key: "s"
                 command: ["systemctl", "poweroff"]
                 confirm: true
             }
