@@ -12,20 +12,33 @@ Item {
 
     anchors.fill: parent
 
+    // Set once the hover delay has passed; only leaving resets it. (A `running`
+    // binding that mentions `text` would restart the delay — and hide the
+    // bubble — every time live text like a temperature updates.)
+    property bool armed: false
+
     HoverHandler {
         id: hover
+        onHoveredChanged: {
+            if (hovered)
+                delayTimer.restart();
+            else {
+                delayTimer.stop();
+                root.armed = false;
+            }
+        }
     }
 
     Timer {
         id: delayTimer
         interval: root.delay
-        running: hover.hovered && root.text !== ""
+        onTriggered: root.armed = true
     }
 
     Rectangle {
         id: bubble
 
-        readonly property bool shown: hover.hovered && !delayTimer.running && root.text !== ""
+        readonly property bool shown: root.armed && root.text !== ""
 
         anchors.top: parent.bottom
         anchors.topMargin: shown ? 12 : 6
