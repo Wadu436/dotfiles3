@@ -6,9 +6,10 @@ import qs.theme
 import qs.services
 import qs.widgets
 
-// Search-first picker with three tabs: apps (SUPER+D), emoji (SUPER+.) and
-// clipboard history (SUPER+V). Type to filter, ↑/↓ or Tab to move, Enter to
-// pick, Ctrl+Tab to switch tabs, Esc to close.
+// Search-first picker with tabs: apps (SUPER+D), windows (SUPER+Tab), emoji
+// (SUPER+.), clipboard history (SUPER+V) and passwords (SUPER+B). Type to
+// filter, ↑/↓ or Tab to move, Enter to pick (Shift+Enter: alternate action),
+// Ctrl+Tab to switch tabs, Esc to close.
 Item {
     id: root
 
@@ -19,6 +20,11 @@ Item {
             placeholder: "Search apps…"
         },
         {
+            id: "windows",
+            label: "Windows",
+            placeholder: "Switch to window…"
+        },
+        {
             id: "emoji",
             label: "Emoji",
             placeholder: "Search emoji…"
@@ -27,6 +33,11 @@ Item {
             id: "clips",
             label: "Clipboard",
             placeholder: "Search clipboard…"
+        },
+        {
+            id: "passwords",
+            label: "Passwords",
+            placeholder: "Search vault…  (Shift+Enter copies the username)"
         }
     ]
     readonly property string mode: Shell.launcherMode
@@ -39,12 +50,16 @@ Item {
             return Emoji.search(input.text, 8);
         case "clips":
             return Clips.search(input.text, 8);
+        case "windows":
+            return Windows.search(input.text, 8);
+        case "passwords":
+            return Passwords.search(input.text, 8);
         default:
             return Apps.search(input.text, 8);
         }
     }
 
-    function pick(item: var): void {
+    function pick(item: var, alt: bool): void {
         if (!item)
             return;
         Shell.close();
@@ -54,6 +69,12 @@ Item {
             break;
         case "clips":
             Clips.pick(item);
+            break;
+        case "windows":
+            Windows.pick(item);
+            break;
+        case "passwords":
+            Passwords.pick(item, alt);
             break;
         default:
             Apps.launch(item);
@@ -70,8 +91,20 @@ Item {
         Shell.launcherMode = modes[(i + delta + modes.length) % modes.length].id;
     }
 
+    // Window focus order and the vault are fetched fresh each time their tab opens
+    function refreshMode(): void {
+        if (mode === "windows")
+            Windows.refresh();
+        else if (mode === "passwords")
+            Passwords.refresh();
+    }
+
     onResultsChanged: selected = 0
-    onModeChanged: input.text = ""
+    onModeChanged: {
+        input.text = "";
+        refreshMode();
+    }
+    Component.onCompleted: refreshMode()
 
     implicitWidth: 580
     implicitHeight: col.implicitHeight + 2 * 14
@@ -185,7 +218,7 @@ Item {
                         else if (e.key === Qt.Key_Up || e.key === Qt.Key_Backtab)
                             root.move(-1);
                         else if (e.key === Qt.Key_Return || e.key === Qt.Key_Enter)
-                            root.pick(root.results[root.selected] ?? null);
+                            root.pick(root.results[root.selected] ?? null, e.modifiers & Qt.ShiftModifier);
                         else
                             return;
                         e.accepted = true;
@@ -221,6 +254,8 @@ Item {
                         return modelData.name.charAt(0).toUpperCase() + modelData.name.slice(1);
                     case "clips":
                         return modelData.image !== "" ? "Image" : modelData.value.trim().split("\n")[0];
+                    case "windows":
+                        return modelData.title || modelData.wayland?.appId || "";
                     default:
                         return modelData.name;
                     }
@@ -234,6 +269,10 @@ Item {
                             const lines = modelData.value.trim().split("\n").length;
                             return [modelData.pinned ? "pinned" : "", Clips.age(modelData, Time.now), lines > 1 ? lines + " lines" : ""].filter(s => s).join("  ·  ");
                         }
+                    case "windows":
+                        return (modelData.wayland?.appId ?? "") + "  ·  workspace " + (modelData.workspace?.id ?? "?");
+                    case "passwords":
+                        return [modelData.user, modelData.folder].filter(s => s).join("  ·  ");
                     default:
                         return modelData.genericName || modelData.comment || "";
                     }
@@ -265,10 +304,25 @@ Item {
 
                         IconImage {
                             anchors.centerIn: parent
-                            visible: root.mode === "apps"
+                            visible: root.mode === "apps" || root.mode === "windows"
                             implicitSize: 30
-                            source: root.mode === "apps" ? Quickshell.iconPath(row.modelData.icon, "application-x-executable") : ""
+                            source: {
+                                if (root.mode === "apps")
+                                    return Quickshell.iconPath(row.modelData.icon, "application-x-executable");
+                                if (root.mode === "windows") {
+                                    const appId = row.modelData.wayland?.appId ?? "";
+                                    const entry = appId ? DesktopEntries.heuristicLookup(appId) : null;
+                                    return Quickshell.iconPath(entry?.icon ?? appId, "application-x-executable");
+                                }
+                                return "";
+                            }
                             asynchronous: true
+                        }
+                        Text {
+                            anchors.centerIn: parent
+                            visible: root.mode === "passwords"
+                            text: "🔑"
+                            font.pixelSize: 20
                         }
                         Text {
                             anchors.centerIn: parent
@@ -325,7 +379,7 @@ Item {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onEntered: root.selected = row.index
-                    onClicked: root.pick(row.modelData)
+                    onClicked: m => root.pick(row.modelData, m.modifiers & Qt.ShiftModifier)
                 }
             }
         }
@@ -336,7 +390,7 @@ Item {
             Layout.topMargin: 6
             Layout.bottomMargin: 6
             horizontalAlignment: Text.AlignHCenter
-            text: input.text === "" ? "Nothing here yet" : "No matches for “" + input.text + "”"
+            text: root.mode === "passwords" && Passwords.loading ? "Loading vault…" : input.text === "" ? "Nothing here yet" : "No matches for “" + input.text + "”"
             color: Theme.muted
         }
     }

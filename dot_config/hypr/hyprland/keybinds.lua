@@ -43,6 +43,16 @@ hl.bind("ALT + Tab", hl.dsp.focus({ workspace = "previous" }))                  
 hl.bind("SUPER + Minus", hl.dsp.workspace.toggle_special("scratchpad"))                    -- Toggle scratchpad workspace
 hl.bind("SUPER + SHIFT + Minus", hl.dsp.window.move({ workspace = "special:scratchpad" })) -- Move active window to scratchpad workspace
 
+-- Tabbed groups
+hl.bind("SUPER + G", hl.dsp.group.toggle())                                    -- Turn the active window into a group (or dissolve its group)
+hl.bind("SUPER + SHIFT + G", hl.dsp.window.move({ out_of_group = true }))      -- Pull the active window out of its group
+hl.bind("SUPER + bracketleft", hl.dsp.group.prev())                            -- Previous tab in group
+hl.bind("SUPER + bracketright", hl.dsp.group.next())                           -- Next tab in group
+hl.bind("SUPER + CTRL + Left", hl.dsp.window.move({ into_group = "l" }))       -- Move the active window into the group on its left
+hl.bind("SUPER + CTRL + Right", hl.dsp.window.move({ into_group = "r" }))      -- ...right
+hl.bind("SUPER + CTRL + Up", hl.dsp.window.move({ into_group = "u" }))         -- ...above
+hl.bind("SUPER + CTRL + Down", hl.dsp.window.move({ into_group = "d" }))       -- ...below
+
 hl.config({
 	binds = {
 		drag_threshold = 10,
@@ -53,9 +63,9 @@ hl.bind("SUPER + SHIFT + mouse:272", hl.dsp.window.resize(), { mouse = true }) -
 
 -- Utilities
 hl.bind("SUPER + D", hl.dsp.exec_cmd("qs ipc call shell launcher apps"))                         -- Application launcher (Quickshell island)
-hl.bind("SUPER + Tab", uwsm_launch("rofi -show window -show-icons"))                              -- Application switcher
+hl.bind("SUPER + Tab", hl.dsp.exec_cmd("qs ipc call shell launcher windows"))                    -- Window switcher (Quickshell island)
 hl.bind("SUPER + Period", hl.dsp.exec_cmd("qs ipc call shell launcher emoji"))                    -- Emoji picker (Quickshell island)
-hl.bind("SUPER + B", uwsm_launch("rofi-rbw"))                                                     -- Bitwarden picker
+hl.bind("SUPER + B", hl.dsp.exec_cmd("qs ipc call shell launcher passwords"))                    -- Bitwarden picker (Quickshell island)
 hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-monitor.sh"))                 -- Screenshot the focused monitor
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshot a region (freezes, then crops)
 hl.bind("SUPER + Pause", hl.dsp.exec_cmd("qs ipc call shell toggleDashboard"))                    -- Toggle dashboard (Quickshell island)

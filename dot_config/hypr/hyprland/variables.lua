@@ -46,6 +46,36 @@ hl.config({
 	dwindle = {
 		preserve_split = true,
 	},
+	-- Tabbed window groups (SUPER+G), styled like the Quickshell island:
+	-- iris → foam border on the focused group, a flat Rosé Pine tab bar on top.
+	group = {
+		col = {
+			border_active = { colors = { "rgba(c4a7e7ee)", "rgba(9ccfd8ee)" }, angle = 45 },
+			border_inactive = "rgba(403d52aa)",
+			border_locked_active = { colors = { "rgba(f6c177ee)", "rgba(ebbcbaee)" }, angle = 45 },
+			border_locked_inactive = "rgba(403d52aa)",
+		},
+		groupbar = {
+			font_family = "JetBrainsMono Nerd Font",
+			font_size = 11,
+			font_weight_active = "bold",
+			height = 20,
+			indicator_height = 0,
+			gradients = true,
+			rounding = 8,
+			gradient_rounding = 8,
+			gaps_in = 3,
+			gaps_out = 3,
+			text_color = "rgba(191724ff)",
+			text_color_inactive = "rgba(908caaff)",
+			col = {
+				active = "rgba(c4a7e7ee)",
+				inactive = "rgba(26233acc)",
+				locked_active = "rgba(f6c177ee)",
+				locked_inactive = "rgba(26233acc)",
+			},
+		},
+	},
 	misc = {
 		force_default_wallpaper = 0,
 		disable_hyprland_logo = true,
@@ -80,7 +110,9 @@ hl.animation({ leaf = "layersIn", enabled = true, speed = 4, bezier = "easeOutQu
 hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "linear", style = "fade" })
 hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+-- Workspaces slide sideways in the direction of the workspace number (Hyprland
+-- picks left/right from the ids), on the same spring the windows and the
+-- Quickshell island use. The scratchpad drops in vertically instead.
+hl.animation({ leaf = "workspaces", enabled = true, speed = 4.5, spring = "easy", style = "slide" })
+hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 4.5, spring = "easy", style = "slidevert" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
