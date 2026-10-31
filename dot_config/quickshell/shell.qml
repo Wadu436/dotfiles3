@@ -1,6 +1,12 @@
-pragma ComponentBehavior: Bound
-import Quickshell // for PanelWindow
+//@ pragma UseQApplication
+import QtQuick
+import Quickshell
+import qs.island
 
-Scope {
-    Bar {}
+ShellRoot {
+    Variants {
+        model: Quickshell.screens
+
+        Island {}
+    }
 }

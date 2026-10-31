@@ -1,20 +1,17 @@
-// Time.qml
-
-// with this line our type becomes a Singleton
 pragma Singleton
 
-import Quickshell
-import Quickshell.Io
 import QtQuick
+import Quickshell
 
-// your singletons should always have Singleton as the type
 Singleton {
-  id: root
+    readonly property date now: clock.date
 
-  readonly property string time: {
-    Qt.formatDateTime(clock.date, "HH:mm")
-  }
+    function format(fmt: string): string {
+        return Qt.formatDateTime(clock.date, fmt);
+    }
 
-  SystemClock{id:clock
-  precision: SystemClock.Minutes}
+    SystemClock {
+        id: clock
+        precision: SystemClock.Minutes
+    }
 }

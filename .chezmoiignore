@@ -2,3 +2,6 @@ README.md
 
 # Machine-local fish entrypoint
 .config/fish/config.fish
+
+# Quickshell language-server link into /run (regenerated per session)
+.config/quickshell/.qmlls.ini

@@ -57,6 +57,18 @@ hl.on("window.title", function(w)
     end
 end)
 
+-- Quickshell island: frosted background behind the island only (the rest of
+-- its window is fully transparent, which ignore_alpha skips). The island
+-- animates itself, so Hyprland's layer fade would just double up.
+hl.layer_rule({
+    match = {
+        namespace = "^quickshell:island$"
+    },
+    blur = true,
+    ignore_alpha = 0.3,
+    no_anim = true
+})
+
 hl.window_rule({
     match = {
         class = "com.saivert.pwvucontrol"

@@ -7,7 +7,7 @@
 hl.config({
 	general = {
 		gaps_in = 3,
-		gaps_out = { top = 0, right = 4, bottom = 4, left = 4 }, -- 0 on top so waybar sits flush
+		gaps_out = 4,
 
 		border_size = 2,
 

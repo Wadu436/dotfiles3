@@ -1,0 +1,13 @@
+[Unit]
+Description=Quickshell desktop shell (island, notifications)
+Documentation=https://quickshell.org
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/qs
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

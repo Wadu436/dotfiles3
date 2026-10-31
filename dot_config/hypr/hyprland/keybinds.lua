@@ -58,7 +58,7 @@ hl.bind("SUPER + Period", uwsm_launch("rofi -modi emoji -show emoji"))          
 hl.bind("SUPER + B", uwsm_launch("rofi-rbw"))                                                     -- Bitwarden picker
 hl.bind("Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-monitor.sh"))                 -- Screenshot the focused monitor
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot.sh"))                 -- Screenshot a region (freezes, then crops)
-hl.bind("SUPER + Pause", hl.dsp.exec_cmd("swaync-client -t -sw"))                                 -- Toggle notification panel
+hl.bind("SUPER + Pause", hl.dsp.exec_cmd("qs ipc call shell toggleDashboard"))                    -- Toggle dashboard (Quickshell island)
 
 hl.on("hyprland.start", function() hl.dispatch(uwsm_launch("clipse -listen")) end)
 hl.bind("SUPER + V", uwsm_launch("kitty --class clipse -e clipse")) -- Clipboard manager
