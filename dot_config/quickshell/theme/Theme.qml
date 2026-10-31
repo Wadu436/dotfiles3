@@ -39,7 +39,7 @@ Singleton {
     // Hyprland's gaps_out keeps windows clear of them.
     // Horizontal inset of the edge pills; matches Hyprland's gaps_out so they
     // line up with window edges.
-    readonly property int screenMargin: 4
+    readonly property int screenMargin: 3
     readonly property int idleHeight: 34
     readonly property int radius: 17
     readonly property int panelRadius: 22

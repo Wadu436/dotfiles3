@@ -6,8 +6,9 @@
 
 hl.config({
 	general = {
-		gaps_in = 3,
-		gaps_out = 4,
+		-- Tight gaps, just enough room for the focused window's 2px outer ring
+		gaps_in = 2,
+		gaps_out = 3,
 
 		-- No border: the focused window is marked by a ring outside it instead
 		-- (see decoration.shadow)
