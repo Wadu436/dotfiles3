@@ -302,14 +302,22 @@ Item {
                             if (m.button === Qt.MiddleButton) {
                                 item.secondaryActivate();
                             } else if (m.button === Qt.RightButton || item.onlyMenu) {
-                                if (item.hasMenu) {
-                                    const p = trayItem.mapToItem(null, 0, trayItem.height + 4);
-                                    item.display(QsWindow.window, p.x, p.y);
-                                }
+                                if (item.hasMenu)
+                                    menuAnchor.open();
                             } else {
                                 item.activate();
                             }
                         }
+                    }
+
+                    QsMenuAnchor {
+                        id: menuAnchor
+                        menu: trayItem.modelData.menu
+                        anchor.item: trayItem
+                        anchor.edges: Edges.Bottom | Edges.Left
+                        anchor.gravity: Edges.Bottom | Edges.Right
+                        onVisibleChanged: Shell.menuOpen = visible
+                        Component.onDestruction: if (visible) Shell.menuOpen = false
                     }
                 }
             }

@@ -73,7 +73,7 @@ PanelWindow {
     // Clicking anywhere outside the island closes an open panel.
     HyprlandFocusGrab {
         windows: [win]
-        active: win.panelHere
+        active: win.panelHere && !Shell.menuOpen
         onCleared: Shell.close()
     }
 

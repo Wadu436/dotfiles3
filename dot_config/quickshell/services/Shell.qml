@@ -16,6 +16,10 @@ Singleton {
 
     property bool osdVisible: false
 
+    // A tray menu is a separate popup surface, which Hyprland's focus grab
+    // counts as "outside"; panels must not auto-close while one is open.
+    property bool menuOpen: false
+
     // Active Hyprland submap ("" when in the default keymap).
     property string submap: ""
 

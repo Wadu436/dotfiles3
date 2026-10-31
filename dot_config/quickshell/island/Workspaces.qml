@@ -77,7 +77,12 @@ Item {
 
         Repeater {
             id: repeater
-            model: root.workspaces
+            // ScriptModel diffs each new array against the last, so only
+            // workspaces that actually came or went get (re)created — a plain
+            // array model would rebuild, and re-animate, every badge.
+            model: ScriptModel {
+                values: [...root.workspaces]
+            }
 
             Rectangle {
                 id: badge
@@ -150,7 +155,9 @@ Item {
                     }
 
                     Repeater {
-                        model: badge.apps.slice(0, root.maxIcons)
+                        model: ScriptModel {
+                            values: badge.apps.slice(0, root.maxIcons)
+                        }
 
                         IconImage {
                             required property string modelData
