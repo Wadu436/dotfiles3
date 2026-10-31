@@ -24,6 +24,8 @@ Singleton {
 
     // Translucent so Hyprland's blur behind the island reads as frosted glass
     readonly property color islandBg: Qt.alpha(base, 0.62)
+    // Panels carry lots of text and can sit over bright windows: more solid
+    readonly property color panelBg: Qt.alpha(base, 0.86)
     // Cards and small tiles inside panels, layered on islandBg
     readonly property color card: Qt.alpha(surface, 0.55)
     readonly property color tile: Qt.alpha(overlay, 0.65)

@@ -170,7 +170,7 @@ PanelWindow {
         radius: win.pill ? height / 2 : Theme.panelRadius
         topLeftRadius: 0
         topRightRadius: 0
-        color: Theme.islandBg
+        color: win.pill ? Theme.islandBg : Theme.panelBg
         // No outline normally; gold while a Hyprland submap is active
         border.width: Shell.submap !== "" ? 1 : 0
         border.color: Theme.gold
@@ -191,6 +191,11 @@ PanelWindow {
                 spring: Theme.spring
                 damping: Theme.damping
                 epsilon: 0.25
+            }
+        }
+        Behavior on color {
+            ColorAnimation {
+                duration: Theme.normal
             }
         }
         Behavior on radius {

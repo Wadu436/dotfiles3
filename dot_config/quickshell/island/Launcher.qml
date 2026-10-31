@@ -438,14 +438,14 @@ Item {
                         Label {
                             Layout.fillWidth: true
                             text: row.title
-                            color: row.current ? Theme.text : Theme.subtle
+                            color: Theme.text
                             font.bold: row.current
                         }
                         Label {
                             Layout.fillWidth: true
                             visible: text !== ""
                             text: row.subtitle
-                            color: Theme.muted
+                            color: Theme.subtle
                             font.pixelSize: Theme.fontSizeSmall
                         }
                     }
