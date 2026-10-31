@@ -52,10 +52,36 @@ Singleton {
             XF86MonBrightnessDown: "Brightness down"
         })
 
+    // Query words that name the same key differently
+    readonly property var keyAliases: ({
+            win: "super",
+            mod: "super",
+            meta: "super",
+            control: "ctrl",
+            return: "enter",
+            left: "←",
+            right: "→",
+            up: "↑",
+            down: "↓"
+        })
+
+    // Search descriptions, and key combos written any way round:
+    // "Super + Q", "super q" and "q super" all find Super+Q (exact combos first)
     function search(query: string, limit: int): var {
         const q = query.trim().toLowerCase();
-        const hits = q === "" ? binds : binds.filter(b => b.desc.toLowerCase().includes(q) || (b.mods + " " + b.keys).toLowerCase().includes(q));
-        return hits.slice(0, limit);
+        if (q === "")
+            return binds.slice(0, limit);
+        const words = q.split(/[\s+]+/).filter(w => w).map(w => keyAliases[w] ?? w);
+        const exact = [], partial = [], byDesc = [];
+        for (const b of binds) {
+            const keys = [...b.modList.map(m => m.toLowerCase()), ...b.keys.toLowerCase().split(" ")];
+            const has = w => keys.some(k => k === w || (k === "1–0" && /^[0-9]$/.test(w)));
+            if (words.every(has))
+                (words.length === b.modList.length + 1 ? exact : partial).push(b);
+            else if (b.desc.toLowerCase().includes(q))
+                byDesc.push(b);
+        }
+        return [...exact, ...partial, ...byDesc].slice(0, limit);
     }
 
     function prettyKey(k: string): string {
