@@ -12,7 +12,10 @@ Item {
     implicitWidth: 460
     implicitHeight: col.implicitHeight + 2 * 20
 
-    Component.onCompleted: SysStats.users++
+    Component.onCompleted: {
+        SysStats.users++;
+        NightLight.refresh();
+    }
     Component.onDestruction: SysStats.users--
 
     component Card: Rectangle {
@@ -151,6 +154,13 @@ Item {
                 label: "Stay awake"
                 checked: Shell.stayAwake
                 onToggled: Shell.stayAwake = !Shell.stayAwake
+            }
+            TogglePill {
+                visible: NightLight.available
+                icon: Icons.night
+                label: "Night light"
+                checked: NightLight.on
+                onToggled: NightLight.toggle()
             }
             Item {
                 Layout.fillWidth: true
