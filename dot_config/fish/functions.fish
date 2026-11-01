@@ -91,7 +91,15 @@ function openremote
     open $remote
 end
 
-function openmr
+function openmr --description "Open the current branch's MR in riff (default) or GitLab"
+    argparse riff glab -- $argv
+    or return 1
+
+    if set -q _flag_riff; and set -q _flag_glab
+        echo "Pass at most one of --riff and --glab."
+        return 1
+    end
+
     if not jj root >/dev/null 2>&1
         echo "Not inside a jj repository."
         return 1
@@ -99,7 +107,28 @@ function openmr
 
     set branch (jj bookmark list --revision 'closest_bookmark(@)' --template 'self.name() ++ "\n"' | head -n 1)
 
-    glab mr view $branch --web
+    if set -q _flag_glab
+        glab mr view $branch --web
+        return
+    end
+
+    set url (glab mr view $branch --output json --jq .web_url)
+    or return 1
+
+    # `riff open` takes no MR argument, so build riff's MR route directly.
+    set port (riff status | string match -rg 'port (\d+)')
+    or begin
+        echo "riff is not running. Start it with `riff up`."
+        return 1
+    end
+
+    set mr (string match -rg '^https?://[^/]+/(.+?)/-/merge_requests/(\d+)' -- $url)
+    or begin
+        echo "Not an MR URL: $url"
+        return 1
+    end
+
+    open "http://127.0.0.1:$port/mr/gitlab/"(string replace -a / %2F -- $mr[1])"/$mr[2]"
 end
 
 function tokei-diff --description "Compare lines of code between two JJ commits using tokei"

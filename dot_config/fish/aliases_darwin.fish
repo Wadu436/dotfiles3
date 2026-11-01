@@ -18,6 +18,16 @@ function claude --wraps=claude --description 'Run Claude Code with 1Password-res
     command claude $argv
 end
 
+function codex --wraps=codex --description 'Run Codex with 1Password-resolved env'
+    ensure_env
+    command codex $argv
+end
+
+function Codex --wraps=codex --description 'Run Codex with 1Password-resolved env'
+    ensure_env
+    command codex $argv
+end
+
 function glab --wraps=glab --description "Run Gitlab with the 1Password-resolved env"
     ensure_env
     command glab $argv
